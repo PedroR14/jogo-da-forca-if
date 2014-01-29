@@ -51,12 +51,21 @@ public class ForcaController {
 		return "jogar";
 	}
 	
+	@RequestMapping(value="responder")
+	public @ResponseBody String responder(Model model, HttpServletResponse response) throws IOException{
+
+		String teste = "forca";
+		
+		return teste;
+	}
+	
 	@RequestMapping(value="verificar")
 	public @ResponseBody JogarResposta verificar(@RequestParam("letra") String letra,Model model, HttpServletResponse response) throws IOException{
 		System.out.println(letra);
-		model.addAttribute("letra", letra);
+		String palavra = "forca";
+		char[] palavraarray = palavra.toCharArray();
 		
-		return new JogarResposta(letra, 3);
+		return new JogarResposta(letra, 3,palavraarray);
 	}
 	
 	@RequestMapping(value="categoria/salvar", method=RequestMethod.POST)
@@ -73,7 +82,7 @@ public class ForcaController {
 	
 	@RequestMapping(value="criar_forca")
 	public String criaforca(Model model){
-	
+		
 		model.addAttribute("forca", new Forca());
 		model.addAttribute("categoria", new Categoria());
 		
