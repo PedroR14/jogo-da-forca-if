@@ -8,31 +8,40 @@
 	 <script type="text/javascript">
 
 		var traco = " __ ";
-		var tracos = [];
+		var tracos = [" "];
 		
-		function mostraTraco(){
+		function iniciar(){
 			var letra = 'a';
 			
 			$.ajax({
 				url: 'responder',
 				type: 'get',
 				dataType: 'json',
-				//data: {letra:letra},
 				success: function (data) {
-					alert('Você encontrou a letra: ' + data);
-					alert('array '+ data);
+					gerartracos(data.tamanho);
 				},
 				error: function () {
 					console.log('Deu erro');
 				}
 			});
 	
-		
-			for (var i = 0; i <= palavra.val().length - 1; i++){
-				tracos[i] = traco;
-				$("#naoApaga").append(traco);
-			}
 			
+		}
+		
+		function gerartracos(quantidade){
+			for (var i = 0; i < quantidade; i++){
+				tracos[i] = traco;
+			}
+		}
+		
+		function modificartracos(posicao, substituta){
+			tracos[posicao] = substituta;
+			mostrartracos();
+		}
+		
+		function mostrartracos(){
+			$( "#palavra" ).empty();
+			$( "#palavra" ).append(tracos);
 		}
 		
 		function verificar(letra){
@@ -44,7 +53,16 @@
 				data: {letra:letra},
 				success: function (data) {
 					alert('Você encontrou a letra: ' + data.letra);
-					alert('array '+ data.palavra);
+					if(data.resultado > 0){
+						if(data.lugar.length == 1){
+							modificartracos(data.lugar - 1 ,letra);
+						}
+						if(data.lugar.length > 1){
+							for (var i = 0; i < data.lugar.length; i++) {
+								modificartracos(data.lugar[i] - 1, letra);
+							}
+						}
+					}
 				},
 				error: function () {
 					console.log('Deu erro');
@@ -55,19 +73,6 @@
 			$("#letra").empty();
 			$("#letra").append(letra);
 			
-			var palavra = $("input[name=palavra]");
-			var palavraArray = palavra.val().split('');
-		
-			for (var i = 0; i <= palavra.val().length - 1; i++){
-				if(palavraArray[i] == letra){
-					alert("saporra é igual")
-					tracos[i] = letra;
-				}
-			}
-		
-			alert(tracos);
-			$( "#naoApaga" ).empty();
-			$( "#naoApaga" ).append(tracos);
 		}
 	
 
@@ -96,7 +101,7 @@
 		$(function(){
 			
 			mostrarTeclado();
-			mostraTraco();
+			iniciar();
 		});
 
 	</script>
@@ -113,6 +118,8 @@ Bem vindo ao jogo da forca! Ha hai!
 </div>
 <div id="letra">
 </div>
-
+<div id="palavra">
+${tracos}
+</div>
 </body>
 </html>
