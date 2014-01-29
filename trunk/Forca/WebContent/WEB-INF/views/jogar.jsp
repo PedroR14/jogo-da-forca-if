@@ -9,16 +9,30 @@
 
 		var traco = " __ ";
 		var tracos = [];
-	
+		
 		function mostraTraco(){
+			var letra = 'a';
+			
+			$.ajax({
+				url: 'responder',
+				type: 'get',
+				dataType: 'json',
+				//data: {letra:letra},
+				success: function (data) {
+					alert('Você encontrou a letra: ' + data);
+					alert('array '+ data);
+				},
+				error: function () {
+					console.log('Deu erro');
+				}
+			});
 	
-			var palavra = $("input[name=palavra]");
 		
 			for (var i = 0; i <= palavra.val().length - 1; i++){
 				tracos[i] = traco;
 				$("#naoApaga").append(traco);
 			}
-			alert(palavrasep)
+			
 		}
 		
 		function verificar(letra){
@@ -29,16 +43,14 @@
 				dataType: 'json',
 				data: {letra:letra},
 				success: function (data) {
-					alert('Você encontrou a letra na posicao: ' + data.lugar);
+					alert('Você encontrou a letra: ' + data.letra);
+					alert('array '+ data.palavra);
 				},
 				error: function () {
 					console.log('Deu erro');
 				}
 			});
 			
-			var spring = $("input[name=letra]");
-			var springasdf = spring.val();
-			alert(springasdf);
 			
 			$("#letra").empty();
 			$("#letra").append(letra);
@@ -82,7 +94,9 @@
 		}
 	
 		$(function(){
+			
 			mostrarTeclado();
+			mostraTraco();
 		});
 
 	</script>
