@@ -1,6 +1,7 @@
 package controle;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
@@ -21,7 +22,9 @@ import dominio.Categoria;
 import dominio.Desafio;
 import dominio.Forca;
 import dominio.ForcaService;
-import dominio.JogarResposta;
+import dominio.InformacoesJogo;
+import dominio.IniciarJogo;
+import dominio.EnviarResposta;
 import dominio.Usuario;
 import dominio.UsuariosService;
 
@@ -34,6 +37,11 @@ public class ForcaController {
 	@Autowired
 	private UsuariosService service_usuario;
 	
+	private  String[] palavra_array;
+
+	
+
+	
 	
 	@RequestMapping(value="inserir_categoria")
 	public String criarcategoria(Model model){
@@ -45,27 +53,48 @@ public class ForcaController {
 	
 	@RequestMapping(value="jogar")
 	public String jogar(Model model){
-	
-		model.addAttribute("letra", "letra");
+		
+		IniciarJogo iniciar = new IniciarJogo();
+		String palavra = "testando";
+		palavra_array = iniciar.gerar_arraypalavra(palavra);
+		
+		String tracos = "";
+		
+		for (int i = 0; i < palavra.length(); i++) {
+			tracos = tracos.concat(" __ ");
+		}
+		System.out.println(tracos);
+		
+		model.addAttribute("tracos",tracos);
 		
 		return "jogar";
 	}
 	
 	@RequestMapping(value="responder")
-	public @ResponseBody String responder(Model model, HttpServletResponse response) throws IOException{
-
-		String teste = "forca";
-		
-		return teste;
+	public @ResponseBody InformacoesJogo responder(Model model, HttpServletResponse response) throws IOException{
+			
+		return new InformacoesJogo(palavra_array.length - 1);
 	}
 	
 	@RequestMapping(value="verificar")
-	public @ResponseBody JogarResposta verificar(@RequestParam("letra") String letra,Model model, HttpServletResponse response) throws IOException{
+	public @ResponseBody EnviarResposta verificar(@RequestParam("letra") String letra,Model model, HttpServletResponse response) throws IOException{
 		System.out.println(letra);
-		String palavra = "forca";
-		char[] palavraarray = palavra.toCharArray();
+		ArrayList<Integer> positions_list = new ArrayList<Integer>();
+		int resultado = 0;
 		
-		return new JogarResposta(letra, 3,palavraarray);
+		for (int i = 0; i < palavra_array.length; i++) {
+			if(letra.equalsIgnoreCase(palavra_array[i])){
+				positions_list.add(i);
+				resultado = 1;
+			}
+		}	
+		
+		int[] posicoes = new int[positions_list.size()];
+		for (int i = 0; i < posicoes.length; i++) {
+			posicoes[i] = positions_list.get(i);
+		}
+		
+		return new EnviarResposta(letra, posicoes, resultado);
 	}
 	
 	@RequestMapping(value="categoria/salvar", method=RequestMethod.POST)
