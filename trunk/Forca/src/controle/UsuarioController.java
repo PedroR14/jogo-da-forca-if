@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import dominio.AlgoritmoDerpofoldao;
+import dominio.Forca;
 import dominio.ForcaService;
 import dominio.Usuario;
 import dominio.UsuariosService;
@@ -131,6 +133,26 @@ public class UsuarioController {
 				if(result.hasErrors()){
 					return "login";
 				}
+				AlgoritmoDerpofoldao derpofoldao = new AlgoritmoDerpofoldao();
+				
+				List<Usuario> usuarios = service.getTodos();
+				
+				int id_usuario = derpofoldao.gerarNumero();
+				int i = usuarios.size() - 1;
+				if(usuarios.size() != 0){
+					while(i>=0){
+						if(id_usuario != usuarios.get(i).getid()){
+							usuario.setid(id_usuario);
+							i--;
+						} else if (id_usuario == usuarios.get(i).getid()){
+							id_usuario = derpofoldao.gerarNumero();
+							i = usuarios.size() - 1;
+						}
+					}	
+				}else{
+					usuario.setid(id_usuario);
+				}
+				
 				service.inserir(usuario);
 				model.addAttribute("mensagem", "Usuario cadastrado com sucesso.");
 				return "forward:/usuario/logar";

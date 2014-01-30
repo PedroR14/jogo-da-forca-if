@@ -56,5 +56,13 @@ public class ForcaService {
 		return forca_repositorio.getNotificacoes(id_usuario);
 		
 	}
+	
+	public void ForcaVitoria(int id_usuario, int pontos){
+		forca_repositorio.ForcaVitoria(id_usuario, pontos);
+	}
+	
+	public void ForcaDerrota(int id_usuario){
+		forca_repositorio.ForcaDerrota(id_usuario);
+	}
 
 }

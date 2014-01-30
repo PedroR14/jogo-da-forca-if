@@ -47,13 +47,27 @@ public class UsuarioDAO implements UsuarioRepositorio {
 	public void inserir(Usuario usuario) {
 		try{
 			Connection conexao = dataSource.getConnection();
-			String sql = "insert into usuarios (nome, login, email, senha) "
-					+ "values (?, ?, ?, ?)";
+			String sql = "insert into usuarios (id ,nome, login, email, senha) values (? ,?, ?, ?, ?)";
 			PreparedStatement stm = conexao.prepareStatement(sql);
-			stm.setString(1, usuario.getNome());
-			stm.setString(2, usuario.getlogin());
-			stm.setString(3, usuario.getemail());
-			stm.setString(4, usuario.getSenha());
+			stm.setInt(1, usuario.getid());
+			stm.setString(2, usuario.getNome());
+			stm.setString(3, usuario.getlogin());
+			stm.setString(4, usuario.getemail());
+			stm.setString(5, usuario.getSenha());
+			stm.executeUpdate();
+			stm.close();
+			inserir_pontuacao(usuario.getid());
+		}catch(SQLException ex){
+			throw new RuntimeException(ex);
+		}
+	}
+	
+	public void inserir_pontuacao(int id_usuario) {
+		try{
+			Connection conexao = dataSource.getConnection();
+			String sql = "insert into pontuacao (id_usuario) value (?)";
+			PreparedStatement stm = conexao.prepareStatement(sql);
+			stm.setInt(1, id_usuario);
 			stm.executeUpdate();
 			stm.close();
 		}catch(SQLException ex){
