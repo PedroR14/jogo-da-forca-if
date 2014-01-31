@@ -70,7 +70,7 @@ public class UsuarioController {
 			return "redirect:/login";
 		}
 		Usuario usuario = (Usuario)session.getAttribute("usuario");
-		
+		model.addAttribute("pontos", service_forca.getpontos(usuario.getid()));
 		model.addAttribute("usuario",usuario);
 		return "main";
 	}

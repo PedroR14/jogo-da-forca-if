@@ -64,5 +64,9 @@ public class ForcaService {
 	public void ForcaDerrota(int id_usuario){
 		forca_repositorio.ForcaDerrota(id_usuario);
 	}
+	
+	public int getpontos(int id_usuario){
+		return forca_repositorio.getpontos(id_usuario);
+	}
 
 }

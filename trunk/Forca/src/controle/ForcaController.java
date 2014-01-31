@@ -38,6 +38,10 @@ public class ForcaController {
 	private UsuariosService service_usuario;
 	
 	private  String[] palavra_array;
+	
+	private int acertos;
+	private int erros;
+	private boolean acabou = false;
 
 	
 
@@ -81,20 +85,43 @@ public class ForcaController {
 		System.out.println(letra);
 		ArrayList<Integer> positions_list = new ArrayList<Integer>();
 		int resultado = 0;
+		boolean achou = false;
+		acabou = false;
 		
 		for (int i = 0; i < palavra_array.length; i++) {
 			if(letra.equalsIgnoreCase(palavra_array[i])){
 				positions_list.add(i);
 				resultado = 1;
+				acertos++;
+				achou = true;
 			}
 		}	
+		if(!achou)
+			erros++;
 		
 		int[] posicoes = new int[positions_list.size()];
 		for (int i = 0; i < posicoes.length; i++) {
 			posicoes[i] = positions_list.get(i);
 		}
+		if(acertos == (palavra_array.length-1) || erros == 6)
+			acabou = true;
 		
-		return new EnviarResposta(letra, posicoes, resultado);
+		return new EnviarResposta(letra,posicoes,resultado,acertos,erros,acabou);
+	}
+	
+	@RequestMapping(value="fimdejogo")
+	public String fimdejogo(Model model,HttpSession session){
+		Usuario usuario = (Usuario)session.getAttribute("usuario");
+		if(acertos == (palavra_array.length-1)){
+			model.addAttribute("mensagem", "Você ganhou 10pts");
+			service.ForcaVitoria(usuario.getid(), 10);
+			model.addAttribute("pontos", "Sua nova pontuação é "+service.getpontos(usuario.getid()));
+			acertos = 0;
+			erros = 0;
+		}
+		
+		
+		return "Fimdejogo";
 	}
 	
 	@RequestMapping(value="categoria/salvar", method=RequestMethod.POST)
@@ -110,7 +137,7 @@ public class ForcaController {
 	}
 	
 	@RequestMapping(value="criar_forca")
-	public String criaforca(Model model){
+	public String criarforca(Model model){
 		
 		model.addAttribute("forca", new Forca());
 		model.addAttribute("categoria", new Categoria());
