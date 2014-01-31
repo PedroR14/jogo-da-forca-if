@@ -17,7 +17,7 @@
 	<img src="#" alt="#" class="img-thumbnail">
 </div>
 <div id=topo>
-	<p align="right">Olá,${usuario.nome}, você possui 0pts<br>
+	<p align="right">Olá,${usuario.nome}, você possui ${pontos} pts<br>
 	visulizar Ranking, Sair<br></p>
 </div>
 

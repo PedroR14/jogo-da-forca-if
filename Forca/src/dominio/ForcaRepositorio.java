@@ -16,4 +16,5 @@ public interface ForcaRepositorio {
 	List<String> getNotificacoes(Integer id_usuario);
 	void ForcaVitoria(int id_usuario, int pontos);
 	void ForcaDerrota(int id_usuario);
+	int getpontos(int id_usuario);
 }

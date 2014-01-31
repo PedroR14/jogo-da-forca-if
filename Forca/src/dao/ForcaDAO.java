@@ -213,7 +213,7 @@ public class ForcaDAO implements ForcaRepositorio{
 		try{
 			Connection conexao = dataSource.getConnection();
 			String sql = "update pontuacao set pontos = pontos + ?, vitorias = vitorias + 1 "
-					+ " where id = ?";
+					+ " where id_usuario = ?";
 			PreparedStatement stm = conexao.prepareStatement(sql);
 			stm.setInt(1, pontos);
 			stm.setInt(2, id_usuario);
@@ -229,6 +229,27 @@ public class ForcaDAO implements ForcaRepositorio{
 	public void ForcaDerrota(int id_usuario) {
 		// TODO Auto-generated method stub
 		
+	}
+
+
+	@Override
+	public int getpontos(int id_usuario) {
+		try{
+			Connection conexao = dataSource.getConnection();
+			Statement stm = conexao.createStatement();
+			String sql = "select pontos from pontuacao where id_usuario = "+id_usuario+"";
+			ResultSet rs = stm.executeQuery(sql);
+			ArrayList<Categoria> categorias = new ArrayList<>();
+			int pontos = 0;
+			while(rs.next()){
+				pontos = rs.getInt(1);
+			}
+			rs.close();
+			stm.close();
+			return pontos;
+		}catch(SQLException ex){
+			throw new RuntimeException(ex);
+		}
 	}
 
 }

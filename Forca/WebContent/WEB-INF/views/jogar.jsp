@@ -46,6 +46,8 @@
 		
 		function verificar(letra){
 			
+			
+			
 			$.ajax({
 				url: 'verificar',
 				type: 'get',
@@ -62,6 +64,11 @@
 								modificartracos(data.lugar[i] - 1, letra);
 							}
 						}
+						
+					}
+					if(data.acabou == true){
+						var novaURL = 'http://localhost:8080/spring/fimdejogo';
+						$(window.document.location).attr('href',novaURL);
 					}
 				},
 				error: function () {
@@ -72,6 +79,7 @@
 			
 			$("#letra").empty();
 			$("#letra").append(letra);
+			
 			
 		}
 	
@@ -99,7 +107,6 @@
 		}
 	
 		$(function(){
-			
 			mostrarTeclado();
 			iniciar();
 		});
