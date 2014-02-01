@@ -10,6 +10,13 @@
 <link rel="stylesheet" type="text/css" href="<c:url value="/resources/css/bootstrap.css" />" />
 <link rel="stylesheet" type="text/css" href="<c:url value="/resources/css/bootstrap-theme.min.css" />" />
 <link rel="stylesheet" type="text/css" href="<c:url value="/resources/css/bootstrap-theme.css" />" />
+<script src="<c:url value="/resources/css/jquery.js" />"></script>
+<script type="text/javascript">
+	$(function(){
+		$("#forcas").load('http://localhost:8080/spring/listaforcas');
+		$("#usuarios").load('http://localhost:8080/spring/lista_usuarios');
+	});
+</script>
 <title>Principal</title>
 </head>
 <body>
@@ -24,16 +31,15 @@
 <c:url var="url" value="/usuario"/>
 <c:url var="url2" value="/inserir_categoria"/>
 <c:url var="url3" value="/criar_forca"/>
-<c:url var="url4" value="/desafiar"/>
-<c:url var="url5" value="/jogar"/>
 
 
 <a href="${url}/editar?id=${usuario.id}">EDITAR PERFIL</a>
 <a href="${url2}">Categoria</a>
 <a href="${url3}">Criar forca</a>
-<a href="${url4}">desafiar</a>
-<a href="${url5}">jogar</a>
 
-<iframe width='500px' height='500px' frameborder='0' src='http://localhost:8080/spring/usuario/notificacoes'></iframe>
+
+<iframe width='250px' height='250px' frameborder='0' src='http://localhost:8080/spring/usuario/notificacoes'></iframe>
+<div id=forcas ></div>
+<div id=usuarios ></div>
 </body>
 </html>

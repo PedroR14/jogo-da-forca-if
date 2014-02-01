@@ -9,8 +9,10 @@
 <title>Insert title here</title>
 </head>
 <body>
-<c:forEach var="notificacao" items="${notificacoes}">
-	${notificacao}<br><hr><br>
-</c:forEach> 
+	<c:url var="perfil" value="/perfil_usuario?idusuario="/>
+	<c:forEach var="usuario" items="${usuarios}">
+		<a href="${perfil}${usuario.id}">${usuario.login}</a>
+		<hr><br>
+	</c:forEach>
 </body>
 </html>

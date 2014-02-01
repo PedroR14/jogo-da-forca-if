@@ -12,17 +12,15 @@
 	
 	<h2>Desafiar</h2>
 
-	<c:url var="actionurl" value="desafio/salvar"/>
-	<form action="${actionurl}" method="post">
+	<c:url var="actionurl" value="desafio/salvar?id_destin="/>
+	<form action="${actionurl}${usuario_destinatario}" method="post">
 	
 
 	Dica: <input type="text" name="dica" value=""/> <br>
+	
 	Palavra: <input type="text" name="palavra" value=""/> <br>
 	
 	Aposta: <input type="text" name="aposta" value=""/> <br>
-	
-	Desafiado: <input type="text" name="usuario_destinatario" value=""/> <br>
-	${mensagem}
 	
 	<select name = "cod_categoria" value = "${forca.cod_categoria }"> 
 	<c:forEach var="categoria" items="${categorias}">
