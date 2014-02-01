@@ -55,12 +55,13 @@ public class ForcaController {
 		return "criar_categoria";
 	}
 	
-	@RequestMapping(value="jogar")
-	public String jogar(Model model){
+	@RequestMapping(value="jogar", method=RequestMethod.GET)
+	public String jogar(@RequestParam("idforca") Integer idforca,Model model){
 		
 		IniciarJogo iniciar = new IniciarJogo();
-		String palavra = "testando";
+		String palavra = service.getPorid_forca(idforca).getPalavra();
 		palavra_array = iniciar.gerar_arraypalavra(palavra);
+		service.excluir(idforca);
 		
 		String tracos = "";
 		
@@ -72,6 +73,16 @@ public class ForcaController {
 		model.addAttribute("tracos",tracos);
 		
 		return "jogar";
+	}
+	
+	
+	
+	@RequestMapping(value="listaforcas")
+	public String notificacoes(
+			Model model,HttpSession session){
+		Usuario usuario = (Usuario)session.getAttribute("usuario");
+		model.addAttribute("forcas", service.getTodasForca(usuario.getid()));
+		return "lista_forcas";
 	}
 	
 	@RequestMapping(value="responder")
@@ -160,7 +171,7 @@ public class ForcaController {
 		AlgoritmoDerpofoldao derpofoldao = new AlgoritmoDerpofoldao();
 		Usuario usuario = (Usuario)session.getAttribute("usuario");
 		
-		List<Forca> forcas = service.getTodasForca();
+		List<Forca> forcas = service.getTodasForca_semexcessao();
 		
 		int id_forca = derpofoldao.gerarNumero();
 		int i = forcas.size() - 1;
@@ -179,13 +190,14 @@ public class ForcaController {
 		}
 		
 		forca.setId_usuario(usuario.getid());
+		forca.setTem_desafio(0);
 		service.CriarForca(forca);
 				
 		return "main";
 	}
 	
 	@RequestMapping(value="desafiar")
-	public String desafio(Model model){
+	public String desafio(@RequestParam("id_destin") Integer id_destin,Model model){
 		
 		model.addAttribute("forca", new Forca());
 		
@@ -194,7 +206,7 @@ public class ForcaController {
 		int aposta = 0;
 		
 		model.addAttribute("aposta", aposta);
-		model.addAttribute("usuario_destinatario", usuario_destinatario);
+		model.addAttribute("usuario_destinatario", id_destin);
 		model.addAttribute("categorias", categorias);
 		
 		return "desafio";
@@ -202,7 +214,7 @@ public class ForcaController {
 	
 	@RequestMapping(value="desafio/salvar", method=RequestMethod.POST)
 	public String salvardesafio(@Valid Forca forca, BindingResult result, 
-			String usuario_destinatario,int aposta,Model model,HttpSession session){
+			@RequestParam("id_destin") Integer id_destin,int aposta,Model model,HttpSession session){
 		
 		if(result.hasErrors()){
 			return "desafio";
@@ -213,22 +225,10 @@ public class ForcaController {
 		Usuario usuario = (Usuario)session.getAttribute("usuario");
 		
 		
-		List<Forca> forcas = service.getTodasForca();
+		List<Forca> forcas = service.getTodasForca_semexcessao();
 		List<Usuario> usuarios = service_usuario.getTodos();
-		boolean usuario_existe = false;
 		
-		for (int i = 0; i < usuarios.size(); i++) {
-			if(usuarios.get(i).getlogin().equals(usuario_destinatario)){
-				desafio.setId_usuario_destinatario(usuarios.get(i).getid());
-				usuario_existe = true;
-			}
-		}
-		
-		if(!usuario_existe){
-			model.addAttribute("mensagem", "usuario não existe");
-			return "desafio";
-		}
-		System.out.println(usuario_destinatario);
+				desafio.setId_usuario_destinatario(id_destin);
 		
 		
 		int id_forca = derpofoldao.gerarNumero();
@@ -246,7 +246,7 @@ public class ForcaController {
 		}else{
 			forca.setId_forca(id_forca);
 		}
-		
+		forca.setTem_desafio(1);
 		desafio.setId_forca(id_forca);
 		desafio.setAposta(aposta);
 		desafio.setId_usuario_remetente(usuario.getid());

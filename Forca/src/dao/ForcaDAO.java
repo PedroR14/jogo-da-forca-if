@@ -33,7 +33,7 @@ public class ForcaDAO implements ForcaRepositorio{
 			stm.setString(3, Integer.toString(forca.getCod_categoria()));
 			stm.setString(4, forca.getDica());
 			stm.setString(5, forca.getPalavra());
-			stm.setString(6, Integer.toString(forca.getTem_desafio()));
+			stm.setInt(6,forca.getTem_desafio());
 			stm.executeUpdate();
 			stm.close();
 		}catch(SQLException ex){
@@ -44,12 +44,46 @@ public class ForcaDAO implements ForcaRepositorio{
 
 	
 	public void excluirForca(Integer id_forca) {
-		// TODO Auto-generated method stub
+		
+		try{
+			Connection conexao = dataSource.getConnection();
+			String sql = " delete from forcas where id_forca = "+id_forca+"";
+			PreparedStatement stm = conexao.prepareStatement(sql);
+			stm.executeUpdate();
+			stm.close();
+		}catch(SQLException ex){
+			throw new RuntimeException(ex);
+		}
 		
 	}
 
 	
-	public List<Forca> getTodasForca() {
+	public List<Forca> getTodasForca(Integer id_usuario) {
+		try{
+			Connection conexao = dataSource.getConnection();
+			Statement stm = conexao.createStatement();
+			String sql = "select * from forcas where id_usuario != "+id_usuario+" and ter_desfio = 0";
+			ResultSet rs = stm.executeQuery(sql);
+			ArrayList<Forca> forcas = new ArrayList<>();
+			while(rs.next()){
+				Forca forca = new Forca();
+				forca.setId_forca( rs.getInt("id_forca") );
+				forca.setId_usuario(rs.getInt("id_usuario"));
+				forca.setCod_categoria(rs.getInt("cod_categoria"));
+				forca.setDica(rs.getString("dica"));
+				forca.setPalavra(rs.getString("palavra"));
+				forca.setTem_desafio(rs.getInt("ter_desfio"));
+				forcas.add(forca);
+			}
+			rs.close();
+			stm.close();
+			return forcas;
+		}catch(SQLException ex){
+			throw new RuntimeException(ex);
+		}
+	}
+	
+	public List<Forca> getTodasForca_semexcessao() {
 		try{
 			Connection conexao = dataSource.getConnection();
 			Statement stm = conexao.createStatement();
@@ -73,11 +107,32 @@ public class ForcaDAO implements ForcaRepositorio{
 			throw new RuntimeException(ex);
 		}
 	}
+	
+	
 
 
 	public Forca getPorid_forca(Integer id_forca) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		try{
+			Connection conexao = dataSource.getConnection();
+			Statement stm = conexao.createStatement();
+			String sql = "select * from forcas where id_forca = "+id_forca+"";
+			ResultSet rs = stm.executeQuery(sql);
+			Forca forca = new Forca();
+			while(rs.next()){
+				forca.setId_forca( rs.getInt("id_forca") );
+				forca.setId_usuario(rs.getInt("id_usuario"));
+				forca.setCod_categoria(rs.getInt("cod_categoria"));
+				forca.setDica(rs.getString("dica"));
+				forca.setPalavra(rs.getString("palavra"));
+				forca.setTem_desafio(rs.getInt("ter_desfio"));
+			}
+			rs.close();
+			stm.close();
+			return forca;
+		}catch(SQLException ex){
+			throw new RuntimeException(ex);
+		}
 	}
 
 

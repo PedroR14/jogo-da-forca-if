@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import dominio.AlgoritmoDerpofoldao;
 import dominio.Forca;
 import dominio.ForcaService;
+import dominio.IniciarJogo;
 import dominio.Usuario;
 import dominio.UsuariosService;
 
@@ -56,6 +57,7 @@ public class UsuarioController {
 						usuarios.get(i).getSenha().equals(usuario.getSenha())){
 					model.addAttribute("usuario",usuarios.get(i));
 					session.setAttribute("usuario", usuarios.get(i));
+					model.addAttribute("pontos", service_forca.getpontos(usuarios.get(i).getid()));
 					return "main";
 				}
 			}
@@ -171,6 +173,24 @@ public class UsuarioController {
 			return "forward:/usuarios";
 		}
 		
+	}
+	
+	@RequestMapping(value="perfil_usuario", method=RequestMethod.GET)
+	public String PaginaUsuario(@RequestParam("idusuario") Integer idusuario,Model model){
+		
+		Usuario pag_usuario = service.getPorid(idusuario);
+		model.addAttribute("perfil", pag_usuario);
+		
+		return "pagina_usuario";
+	}
+	
+	@RequestMapping(value="lista_usuarios", method=RequestMethod.GET)
+	public String ListarUsuarios(Model model){
+		
+		List<Usuario> usuarios = service.getTodos();
+		model.addAttribute("usuarios", usuarios);
+		
+		return "lista_usuarios";
 	}
 	
 	@InitBinder

@@ -9,8 +9,12 @@
 <title>Insert title here</title>
 </head>
 <body>
-<c:forEach var="notificacao" items="${notificacoes}">
-	${notificacao}<br><hr><br>
+<c:url var="root" value="/jogar?idforca="/>
+<c:forEach var="forca" items="${forcas}">
+	${forca.dica}<br>
+	${forca.cod_categoria}<br>
+	<a href="${root}${forca.id_forca}">Responder</a>
+	<hr><br>
 </c:forEach> 
 </body>
 </html>

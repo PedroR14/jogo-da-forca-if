@@ -26,8 +26,12 @@ public class ForcaService {
 		return forca_repositorio.getPorid_usuario(id_usuario);
 	}
 	
-	public List<Forca> getTodasForca(){
-		return forca_repositorio.getTodasForca();
+	public List<Forca> getTodasForca(Integer id_usuario){
+		return forca_repositorio.getTodasForca(id_usuario);
+	}
+	
+	public List<Forca> getTodasForca_semexcessao(){
+		return forca_repositorio.getTodasForca_semexcessao();
 	}
 	
 	public List<Categoria> getTotas_categoria(){

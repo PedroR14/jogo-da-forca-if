@@ -7,7 +7,8 @@ public interface ForcaRepositorio {
 	void excluirForca(Integer id_forca);
 	Forca getPorid_forca(Integer id_forca);
 	Forca getPorid_usuario(Integer id_usuario);
-	List<Forca> getTodasForca();
+	List<Forca> getTodasForca(Integer id_usuario);
+	List<Forca> getTodasForca_semexcessao();
 	List<Categoria> getTotas_categoria();
 	Categoria getPor_id_categoria(Integer id_categoria);
 	void CriarCategoria(Categoria categoria);
