@@ -37,6 +37,9 @@ public class ForcaController {
 	@Autowired
 	private UsuariosService service_usuario;
 	
+	@Autowired
+	private Forca forca;
+	
 	private  String[] palavra_array;
 	
 	private int acertos;
@@ -58,19 +61,10 @@ public class ForcaController {
 	@RequestMapping(value="jogar", method=RequestMethod.GET)
 	public String jogar(@RequestParam("idforca") Integer idforca,Model model){
 		
-		IniciarJogo iniciar = new IniciarJogo();
-		String palavra = service.getPorid_forca(idforca).getPalavra();
-		palavra_array = iniciar.gerar_arraypalavra(palavra);
+		palavra_array = forca.gerar_array_letras(idforca);
 		service.excluir(idforca);
 		
-		String tracos = "";
-		
-		for (int i = 0; i < palavra.length(); i++) {
-			tracos = tracos.concat(" __ ");
-		}
-		System.out.println(tracos);
-		
-		model.addAttribute("tracos",tracos);
+		model.addAttribute("tracos",forca.gerar_tracos(palavra_array.length -1 ));
 		
 		return "jogar";
 	}
@@ -94,26 +88,18 @@ public class ForcaController {
 	@RequestMapping(value="verificar")
 	public @ResponseBody EnviarResposta verificar(@RequestParam("letra") String letra,Model model, HttpServletResponse response) throws IOException{
 		System.out.println(letra);
-		ArrayList<Integer> positions_list = new ArrayList<Integer>();
 		int resultado = 0;
-		boolean achou = false;
 		acabou = false;
 		
-		for (int i = 0; i < palavra_array.length; i++) {
-			if(letra.equalsIgnoreCase(palavra_array[i])){
-				positions_list.add(i);
-				resultado = 1;
-				acertos++;
-				achou = true;
-			}
-		}	
-		if(!achou)
+		if(forca.conten_letra(letra, palavra_array)){
+			acertos++;
+			resultado = 1;
+		}else{
 			erros++;
-		
-		int[] posicoes = new int[positions_list.size()];
-		for (int i = 0; i < posicoes.length; i++) {
-			posicoes[i] = positions_list.get(i);
 		}
+		
+		int[] posicoes = forca.posicoes(letra, palavra_array);
+	
 		if(acertos == (palavra_array.length-1) || erros == 6)
 			acabou = true;
 		
@@ -127,6 +113,11 @@ public class ForcaController {
 			model.addAttribute("mensagem", "Você ganhou 10pts");
 			service.ForcaVitoria(usuario.getid(), 10);
 			model.addAttribute("pontos", "Sua nova pontuação é "+service.getpontos(usuario.getid()));
+			acertos = 0;
+			erros = 0;
+		}else{
+			model.addAttribute("mensagem", "Você perdeu cara");
+			model.addAttribute("pontos", "Sua pontuação é "+service.getpontos(usuario.getid()));
 			acertos = 0;
 			erros = 0;
 		}
