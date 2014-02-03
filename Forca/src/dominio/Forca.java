@@ -1,6 +1,15 @@
 package dominio;
 
+import java.util.ArrayList;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@Component
 public class Forca {
+	
+	@Autowired
+	private ForcaService service;
 	
 	private int id_forca;
 	private int id_usuario;
@@ -57,6 +66,53 @@ public class Forca {
 	}
 	public void setTem_desafio(int tem_desafio) {
 		this.tem_desafio = tem_desafio;
+	}
+	public String[] gerar_array_letras(Integer idforca){
+		
+		String palavra = service.getPorid_forca(idforca).getPalavra();
+		System.out.println(service.getPorid_forca(idforca).getPalavra());
+		
+		String[] arrayletras = palavra.split("");
+		
+		return arrayletras;
+	}
+	
+	public String gerar_tracos(int quant){
+		String tracos = "";
+		
+		for (int i = 0; i < quant; i++) {
+			tracos = tracos.concat(" __ ");
+		}
+		
+		return tracos;
+	}
+	
+	
+	public boolean conten_letra(String Letra, String[] palavra_array){
+		
+		for (int i = 0; i < palavra_array.length; i++) {
+			if(Letra.equalsIgnoreCase(palavra_array[i])){
+				return true;
+			}
+		}	
+		return false;	
+	}
+	public int[] posicoes(String Letra, String[] palavra_array){
+		
+		ArrayList<Integer> positions_list = new ArrayList<Integer>();
+		
+		for (int i = 0; i < palavra_array.length; i++) {
+			if(Letra.equalsIgnoreCase(palavra_array[i])){
+				positions_list.add(i);
+			}
+		}
+		
+		int[] posicoes = new int[positions_list.size()];
+		for (int i = 0; i < posicoes.length; i++) {
+			posicoes[i] = positions_list.get(i);
+		}
+		
+		return posicoes;	
 	}
 
 }

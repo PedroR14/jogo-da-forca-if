@@ -11,9 +11,4 @@ public class IniciarJogo {
 		return arrayletras;
 	}
 	
-	public int quantidade(String palavra){
-		
-		return palavra.length();
-	}
-
 }
