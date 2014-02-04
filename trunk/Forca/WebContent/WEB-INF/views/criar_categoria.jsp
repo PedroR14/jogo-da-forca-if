@@ -13,6 +13,7 @@
 	<c:url var="actionUrl" value="/categoria/salvar"/>
 	<form action="${actionUrl}" method="post">
 
+
 				Nome categoria
 				<input type="text" name="tipocategoria" value="${categoria.tipocategoria}"/>
 				<form:errors path="categoria.tipocategoria" cssStyle="color:red"/>
