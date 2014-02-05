@@ -1,11 +1,13 @@
 package dominio;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public interface ForcaRepositorio {
 	void CriarForca(Forca forca);
 	void excluirForca(Integer id_forca);
 	Forca getPorid_forca(Integer id_forca);
+	List<Forca> getPorcategoria_forca(Integer categoria,Integer id_usuario);
 	Forca getPorid_usuario(Integer id_usuario);
 	List<Forca> getTodasForca(Integer id_usuario);
 	List<Forca> getTodasForca_semexcessao();

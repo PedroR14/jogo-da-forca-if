@@ -58,6 +58,7 @@ public class UsuarioController {
 					model.addAttribute("usuario",usuarios.get(i));
 					session.setAttribute("usuario", usuarios.get(i));
 					model.addAttribute("pontos", service_forca.getpontos(usuarios.get(i).getid()));
+					model.addAttribute("notificacoes", service_forca.getNotificacoes(usuario.getid()));
 					return "main";
 				}
 			}
@@ -72,6 +73,7 @@ public class UsuarioController {
 			return "redirect:/login";
 		}
 		Usuario usuario = (Usuario)session.getAttribute("usuario");
+		model.addAttribute("notificacoes", service_forca.getNotificacoes(usuario.getid()));
 		model.addAttribute("pontos", service_forca.getpontos(usuario.getid()));
 		model.addAttribute("usuario",usuario);
 		return "main";

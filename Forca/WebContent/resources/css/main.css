@@ -1,0 +1,56 @@
+#topo{
+position:absolute;
+top:14%;
+left:-7%;
+width:1150px;
+height:57px;
+margin-left:100px;
+margin-top:-80px;
+text-align:center;
+}
+#imagem{
+position:absolute;
+top:15%;
+left:78%;
+width:140px;
+height:57px;
+margin-left:100px;
+margin-top:-80px;
+}
+#forcas {
+position:absolute;
+top:70%;
+left:60%;
+width:800px;
+height:700px;
+margin-left:-500px;
+margin-top:-250px;
+text-align:center;
+border-style: solid;
+border-color: #aaaaaa;
+}
+#usuarios {
+position:absolute;
+top:70%;
+left:120%;
+width:200px;
+height:300px;
+margin-left:-500px;
+margin-top:-250px;
+text-align:center;
+border-style: solid;
+border-color: #aaaaaa;
+}
+#notificacoes {
+position:absolute;
+top:70%;
+left:40%;
+width:260px;
+height:400px;
+margin-left:-500px;
+margin-top:-250px;
+text-align:center;
+border-style: solid;
+border-color: #aaaaaa;
+}
+
