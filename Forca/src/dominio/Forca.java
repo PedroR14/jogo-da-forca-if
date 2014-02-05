@@ -129,8 +129,6 @@ public class Forca {
 		return forcas_part;
 	}
 	public boolean possui_prox(int quant, List<Forca> forcas){
-		System.out.println(forcas.size());
-		System.out.println(quant);
 		if((forcas.size() - 6) < quant){
 			return false;
 		}
