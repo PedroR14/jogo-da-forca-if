@@ -1,5 +1,6 @@
 package dominio;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,10 @@ public class ForcaService {
 	}
 	public Forca getPorid_forca(Integer id_forca){
 		return forca_repositorio.getPorid_forca(id_forca);
+	}
+	
+	public List<Forca> getPorcategoria_forca(Integer categoria, Integer id_usuario){
+		return forca_repositorio.getPorcategoria_forca(categoria, id_usuario);
 	}
 	
 	public Forca getPorid_usuario(Integer id_usuario){

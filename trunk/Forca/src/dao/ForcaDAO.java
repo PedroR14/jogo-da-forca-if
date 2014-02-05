@@ -307,4 +307,30 @@ public class ForcaDAO implements ForcaRepositorio{
 		}
 	}
 
+
+	public List<Forca> getPorcategoria_forca(Integer categoria,Integer id_usuario) {
+		try{
+			Connection conexao = dataSource.getConnection();
+			Statement stm = conexao.createStatement();
+			String sql = "select * from forcas where id_usuario != "+id_usuario+" and cod_categoria = "+categoria+" and ter_desfio = 0";
+			ResultSet rs = stm.executeQuery(sql);
+			ArrayList<Forca> forcas = new ArrayList<>();
+			while(rs.next()){
+				Forca forca = new Forca();
+				forca.setId_forca( rs.getInt("id_forca") );
+				forca.setId_usuario(rs.getInt("id_usuario"));
+				forca.setCod_categoria(rs.getInt("cod_categoria"));
+				forca.setDica(rs.getString("dica"));
+				//forca.setPalavra(rs.getString("palavra"));
+				forca.setTem_desafio(rs.getInt("ter_desfio"));
+				forcas.add(forca);
+			}
+			rs.close();
+			stm.close();
+			return forcas;
+		}catch(SQLException ex){
+			throw new RuntimeException(ex);
+		}
+	}
+
 }

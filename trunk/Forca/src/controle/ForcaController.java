@@ -25,6 +25,7 @@ import dominio.ForcaService;
 import dominio.InformacoesJogo;
 import dominio.IniciarJogo;
 import dominio.EnviarResposta;
+import dominio.ListaForcas;
 import dominio.Usuario;
 import dominio.UsuariosService;
 
@@ -71,12 +72,20 @@ public class ForcaController {
 	
 	
 	
-	@RequestMapping(value="listaforcas")
-	public String notificacoes(
-			Model model,HttpSession session){
+	@RequestMapping(value="usuario/listaforcas")
+	public @ResponseBody ListaForcas notificacoes(@RequestParam("quant") Integer quant,Model model,HttpSession session,HttpServletResponse response) throws IOException{
 		Usuario usuario = (Usuario)session.getAttribute("usuario");
-		model.addAttribute("forcas", service.getTodasForca(usuario.getid()));
-		return "lista_forcas";
+		boolean possui_prox = false;
+		
+		List<Forca> forcas = service.getPorcategoria_forca(1,usuario.getid());
+		
+		List<Forca> forcas_part = forca.get_intervalo_forcas(quant, forcas);
+		
+		if(forca.possui_prox(quant, forcas)){
+			possui_prox = true;
+		}
+		
+		return new ListaForcas(forcas_part, possui_prox);
 	}
 	
 	@RequestMapping(value="responder")
@@ -91,14 +100,19 @@ public class ForcaController {
 		int resultado = 0;
 		acabou = false;
 		
+		int[] posicoes = null; 
+		
 		if(forca.conten_letra(letra, palavra_array)){
-			acertos++;
+			posicoes = forca.posicoes(letra, palavra_array);
+			for (int i = 0; i < posicoes.length; i++) {
+				acertos++;
+			}
 			resultado = 1;
 		}else{
 			erros++;
 		}
 		
-		int[] posicoes = forca.posicoes(letra, palavra_array);
+		
 	
 		if(acertos == (palavra_array.length-1) || erros == 6)
 			acabou = true;

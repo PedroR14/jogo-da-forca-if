@@ -12,7 +12,7 @@
 	<c:url var="perfil" value="/perfil_usuario?idusuario="/>
 	<c:forEach var="usuario" items="${usuarios}">
 		<a href="${perfil}${usuario.id}">${usuario.login}</a>
-		<hr><br>
+		<hr>
 	</c:forEach>
 </body>
 </html>

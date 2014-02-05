@@ -1,6 +1,7 @@
 package dominio;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -113,6 +114,27 @@ public class Forca {
 		}
 		
 		return posicoes;	
+	}
+	public List<Forca> get_intervalo_forcas(int quant, List<Forca> forcas){
+		
+		List<Forca> forcas_part = new ArrayList<Forca>();
+		
+		for (int i = quant; i < (quant + 5) ; i++) {
+			if(forcas.size() > i){
+				forcas_part.add(forcas.get(i));
+			}
+			
+		}
+		
+		return forcas_part;
+	}
+	public boolean possui_prox(int quant, List<Forca> forcas){
+		System.out.println(forcas.size());
+		System.out.println(quant);
+		if((forcas.size() - 6) < quant){
+			return false;
+		}
+		return  true;
 	}
 
 }

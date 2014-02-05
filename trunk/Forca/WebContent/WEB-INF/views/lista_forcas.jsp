@@ -13,7 +13,7 @@
 <c:forEach var="forca" items="${forcas}">
 	${forca.dica}<br>
 	${forca.cod_categoria}<br>
-	<a href="${root}${forca.id_forca}">Responder</a>
+	<a href="/jogar?idforca=${forca.id_forca}">Responder</a>
 	<hr><br>
 </c:forEach> 
 </body>
