@@ -41,7 +41,7 @@ public class UsuarioController {
 	
 		model.addAttribute("usuario", new Usuario());
 		
-		return "login";
+		return "index";
 	}
 		
 	
