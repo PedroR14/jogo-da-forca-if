@@ -59,6 +59,6 @@
 		<a href="#"> <h5> Esqueci minha senha </h5></a>
 	</div>
 	
-	<div class="bot"> Jogo da Forca © 2014 </div> 
+	<div class="bot"> Jogo da Forca &copy 2014  </div> 
 </body>
 </html>

@@ -1,0 +1,33 @@
+
+.cadastro, .login{
+	width: 50%;
+	float: left;
+	padding: 5%;
+	min-width: 250px;
+}
+
+.login form, .cadastro form{
+	max-width: 400px;
+	min-width: 200px;
+	margin: 0 auto;
+}
+footer{
+	height: 20px;
+} 
+footer p, header nav.navbar h1, header nav.navbar h3{
+	color: white;
+}
+header nav.navbar h3{
+	float: right;
+	margin-right: 10px;
+}
+header nav.navbar{
+	padding: 10px;
+	border-radius: 0px;
+}
+div.hidden p{
+	margin: 0 auto;
+}
+button.btn{
+	margin-bottom: 10px;
+}
