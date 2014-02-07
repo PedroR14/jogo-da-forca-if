@@ -1,6 +1,9 @@
 package controle;
 
+import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -18,10 +21,13 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import dominio.AlgoritmoDerpofoldao;
+import dominio.EnviarRanking;
 import dominio.Forca;
 import dominio.ForcaService;
+import dominio.InformacoesJogo;
 import dominio.IniciarJogo;
 import dominio.Usuario;
 import dominio.UsuariosService;
@@ -35,6 +41,8 @@ public class UsuarioController {
 	@Autowired
 	private ForcaService service_forca;
 	
+	@Autowired
+	private Usuario usuario;
 	
 	@RequestMapping(value="login")
 	public String login(Model model){
@@ -79,12 +87,56 @@ public class UsuarioController {
 		return "main";
 	}
 	
+	@RequestMapping(value="usuario/mostraranking")
+	public @ResponseBody EnviarRanking Ranking (Model model, HttpServletResponse response) throws IOException{
+		
+		List<Integer> usuarios = service.getUsuario_Ranking();
+		List<Integer> pontos = service.getPontos_Ranking();
+		
+		List<String> usuarios_nomes = new ArrayList<String>();
+		
+		for (int i = 0; i < usuarios.size(); i++) {
+			usuarios_nomes.add(usuario.getNome_porId(usuarios.get(i)));
+		}
+		
+		return new EnviarRanking(usuarios_nomes,pontos);
+	}
+	
+	@RequestMapping(value="ranking_data")
+	public @ResponseBody EnviarRanking Ranking_data (String fim, String inicio, Model model, HttpServletResponse response,
+			HttpSession session) throws IOException, ParseException{
+		System.out.println("inicio1"+inicio);
+		String data_fim = usuario.data_sql(fim);
+		String data_inicio =usuario.data_sql(inicio);
+		Usuario usuario = (Usuario)session.getAttribute("usuario");
+		System.out.println("fim"+data_fim);
+		System.out.println("inicio"+data_inicio);
+		
+		System.out.println(service.getRanking_Data(usuario.getid(), data_inicio, data_fim));
+		
+		List<Integer> usuarios = service.getUsuario_Ranking();
+		List<Integer> pontos = service.getPontos_Ranking();
+		
+		List<String> usuarios_nomes = new ArrayList<String>();
+		
+		
+		return new EnviarRanking(usuarios_nomes,pontos);
+	}
+	
 	@RequestMapping(value="usuario/notificacoes")
 	public String notificacoes(
 			Model model,HttpSession session){
 		Usuario usuario = (Usuario)session.getAttribute("usuario");
 		model.addAttribute("notificacoes", service_forca.getNotificacoes(usuario.getid()));
 		return "notificacoes";
+	}
+	
+	@RequestMapping(value="ranking")
+	public String pagina_ranking(Model model){
+	
+		//model.addAttribute("usuario", new Usuario());
+		
+		return "Ranking";
 	}
 	
 	@RequestMapping(value="usuarios")

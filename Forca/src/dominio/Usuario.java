@@ -1,10 +1,22 @@
 package dominio;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Size;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@Component
 public class Usuario {
+	
+	@Autowired
+	private UsuariosService service;
 	
 	private Integer id;
 	@NotNull @Size(min=5)
@@ -54,27 +66,19 @@ public class Usuario {
 	public void setemail(String email) {
 		this.email = email;
 	}
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		return result;
+	public String getNome_porId(Integer id_usuario){
+		return service.getPorid(id_usuario).getlogin();
 	}
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Usuario other = (Usuario) obj;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
-			return false;
-		return true;
+	public String data_sql(String data) throws ParseException{
+		
+		DateFormat formatter = new SimpleDateFormat("MM/dd/yy");  
+		Date date = (Date)formatter.parse(data);
+		
+		System.out.println("function:"+date);
+		
+		SimpleDateFormat f = new SimpleDateFormat("yyyy/MM/dd"); 
+		String nova_data = f.format(date);
+		
+		return nova_data; 
 	}
 }

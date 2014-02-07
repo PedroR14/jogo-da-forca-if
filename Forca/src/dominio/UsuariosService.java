@@ -27,4 +27,17 @@ public class UsuariosService {
 	public List<Usuario> getTodos(){
 		return repositorio.getTodos();
 	}
+	
+	public List<Integer> getPontos_Ranking(){
+		return repositorio.getPontos_Ranking();
+	}
+	
+	public List<Integer> getUsuario_Ranking(){
+		return repositorio.getUsuario_Ranking();
+	}
+	
+	public Integer getRanking_Data(Integer id_usuario,String inicio, String fim){
+		return repositorio.getRanking_Data(id_usuario,inicio,fim);
+	}
+	
 }
