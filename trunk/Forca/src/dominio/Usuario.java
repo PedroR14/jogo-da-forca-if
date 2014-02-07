@@ -3,7 +3,9 @@ package dominio;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
@@ -80,5 +82,25 @@ public class Usuario {
 		String nova_data = f.format(date);
 		
 		return nova_data; 
+	}
+	public List<UsuarioPontos> gerar_ranking_data(List<Usuario> usuarios,String inicio, String fim){
+		
+		List<UsuarioPontos> usuario_pontos = new ArrayList<UsuarioPontos>();
+		
+		System.out.println("f "+usuarios.get(0).getlogin()+"i "+usuarios.get(0).getid());
+		
+		for (int i = 0; i < usuarios.size(); i++) {
+			UsuarioPontos usuario = new UsuarioPontos();
+			Integer id = usuarios.get(i).getid();
+			System.out.println(inicio);
+			System.out.println(fim);
+			System.out.println(id);
+			System.out.println(service.getRanking_Data(id, inicio, fim));
+			usuario.setPontos(service.getRanking_Data(usuarios.get(i).getid(), inicio, fim));
+			usuario.setId_usuario(usuarios.get(i).getid());
+			usuario_pontos.add(usuario);
+		}
+		
+		return usuario_pontos;
 	}
 }

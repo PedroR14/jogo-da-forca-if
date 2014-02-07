@@ -30,6 +30,7 @@ import dominio.ForcaService;
 import dominio.InformacoesJogo;
 import dominio.IniciarJogo;
 import dominio.Usuario;
+import dominio.UsuarioPontos;
 import dominio.UsuariosService;
 
 @Controller
@@ -78,7 +79,7 @@ public class UsuarioController {
 	public String Principal(
 			Model model,HttpSession session){
 		if((Usuario)session.getAttribute("usuario") == null){
-			return "redirect:/login";
+			return "login";
 		}
 		Usuario usuario = (Usuario)session.getAttribute("usuario");
 		model.addAttribute("notificacoes", service_forca.getNotificacoes(usuario.getid()));
@@ -105,17 +106,18 @@ public class UsuarioController {
 	@RequestMapping(value="ranking_data")
 	public @ResponseBody EnviarRanking Ranking_data (String fim, String inicio, Model model, HttpServletResponse response,
 			HttpSession session) throws IOException, ParseException{
-		System.out.println("inicio1"+inicio);
-		String data_fim = usuario.data_sql(fim);
-		String data_inicio =usuario.data_sql(inicio);
-		Usuario usuario = (Usuario)session.getAttribute("usuario");
-		System.out.println("fim"+data_fim);
-		System.out.println("inicio"+data_inicio);
 		
-		System.out.println(service.getRanking_Data(usuario.getid(), data_inicio, data_fim));
+		List<Usuario> usuarios = service.getTodos();
 		
-		List<Integer> usuarios = service.getUsuario_Ranking();
+		List<UsuarioPontos> usuario_pontos = usuario.gerar_ranking_data(service.getTodos(), usuario.data_sql(inicio), usuario.data_sql(fim));
+		
+		for (int i = 0; i < usuario_pontos.size(); i++) {
+			System.out.println(usuario_pontos.get(i).getPontos()+" pts "+usuario_pontos.get(i).getId_usuario());
+		}
+		
+		
 		List<Integer> pontos = service.getPontos_Ranking();
+		
 		
 		List<String> usuarios_nomes = new ArrayList<String>();
 		

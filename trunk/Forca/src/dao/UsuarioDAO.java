@@ -36,6 +36,7 @@ public class UsuarioDAO implements UsuarioRepositorio {
 				u.setSenha(rs.getString("senha"));
 				usuarios.add(u);
 			}
+			System.out.println("get_todos");
 			rs.close();
 			stm.close();
 			return usuarios;
@@ -170,18 +171,16 @@ public class UsuarioDAO implements UsuarioRepositorio {
 
 	public Integer getRanking_Data(Integer id_usuario,String inicio, String fim) {
 		try{
+			System.out.println("funçaao");
 			Connection conexao = dataSource.getConnection();
-			Statement stm = conexao.createStatement();
-			String sql = "select sum(pontos) from historico where data <= '"+fim+"' "
-					+ "and data >= '"+inicio+"' and id_usuario ="+id_usuario;
+			String sql = "select sum(pontos) from historico where data BETWEEN '"+inicio+"' and '"+fim+"' and id_usuario = "+id_usuario;
+			PreparedStatement stm = conexao.prepareStatement(sql);
 			ResultSet rs = stm.executeQuery(sql);
-			int pontos = 0;
-			ArrayList<Integer> usuarios = new ArrayList<>();
+			Integer pontos = 0;
 			while(rs.next()){
 				pontos = rs.getInt("sum(pontos)");
-				System.out.println("prs:"+rs.getInt("sum(pontos)"));
 			}
-			System.out.println("pf:"+pontos);
+			System.out.println(pontos);
 			rs.close();
 			stm.close();
 			return pontos;

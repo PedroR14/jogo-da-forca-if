@@ -90,7 +90,7 @@
 	<title>Principal</title>
 </head>
 <body>
-
+	<c:url var="url" value="/usuario"/>
 	<div id=imagem>
 		<img src="#" alt="#" class="img-thumbnail">
 	</div>
@@ -106,7 +106,7 @@
   	<div class="criar">
   		<button type="submit" class="btn btn-primary" value="Login">Criar Forca</button>
   	</div>
-<c:url var="url" value="/usuario"/>
+
 <c:url var="url2" value="/inserir_categoria"/>
 <c:url var="url3" value="/criar_forca"/>
 <c:url var="url4" value="/ranking"/>
