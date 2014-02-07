@@ -167,16 +167,15 @@ public class ForcaController {
 		return "criar_forca";
 	}
 	
-	@RequestMapping(value="forca/salvar", method=RequestMethod.POST)
+	@RequestMapping(value="forca/salvar")
 	public String salvarForca(@Valid Forca forca, BindingResult result, 
 			Model model,HttpSession session){
 		if(result.hasErrors()){
-			
 			return "criar_forca";
-			
 		}
 		
 		AlgoritmoDerpofoldao derpofoldao = new AlgoritmoDerpofoldao();
+		
 		Usuario usuario = (Usuario)session.getAttribute("usuario");
 		
 		List<Forca> forcas = service.getTodasForca_semexcessao();
@@ -200,8 +199,8 @@ public class ForcaController {
 		forca.setId_usuario(usuario.getid());
 		forca.setTem_desafio(0);
 		service.CriarForca(forca);
-				
-		return "main";
+		
+		return "redirect:/usuario/main";
 	}
 	
 	@RequestMapping(value="desafiar")

@@ -11,7 +11,7 @@
 	<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 	<script>
 		
-		function ranking_por_data(){
+		function ranking_data(){
 			
 			var inicio = $('#datainicio').val();
 			var fim = $('#datafim').val();
@@ -40,6 +40,6 @@
 <body>
 	<p>Inicio: <input type="text" id="datainicio"></p>
 	<p>Fim: <input type="text" id="datafim"></p>
-	<button type="submit" onclick="ranking_por_data()" value="Login">Criar Forca</button>
+	<button type="submit" onclick="ranking_data()" value="Login">Criar Forca</button>
 </body>
 </html>
