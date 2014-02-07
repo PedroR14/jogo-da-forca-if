@@ -1,12 +1,25 @@
-#topo{
-position:absolute;
-top:14%;
-left:-7%;
-width:1150px;
-height:57px;
-margin-left:100px;
-margin-top:-80px;
-text-align:center;
+header nav.navbar h4{
+	float: right;
+	margin-right: 10px;
+}
+header nav.navbar a{
+	float: right;
+	margin-right: -262px;
+	margin-top: 35px;
+}
+header nav.navbar{
+	padding: 5px;
+	border-radius: 0px;
+}
+footer p, header nav.navbar h1, header nav.navbar h3{
+	color: white;
+}
+.criar{
+	margin-right: 262px;
+	margin-top: 35px;
+}
+button.btn{
+	top:15%;
 }
 #imagem{
 position:absolute;
@@ -17,21 +30,19 @@ height:57px;
 margin-left:100px;
 margin-top:-80px;
 }
-#forcas {
+.forcas {
 position:absolute;
-top:70%;
+top:57%;
 left:60%;
 width:800px;
-height:700px;
+height:500px;
 margin-left:-500px;
 margin-top:-250px;
 text-align:center;
-border-style: solid;
-border-color: #aaaaaa;
 }
 #usuarios {
 position:absolute;
-top:70%;
+top:57%;
 left:120%;
 width:200px;
 height:300px;
@@ -43,7 +54,7 @@ border-color: #aaaaaa;
 }
 #notificacoes {
 position:absolute;
-top:70%;
+top:57%;
 left:40%;
 width:260px;
 height:400px;
@@ -54,3 +65,26 @@ border-style: solid;
 border-color: #aaaaaa;
 }
 
+.window{
+    display:none;
+    width:550px;
+    height:400px;
+    position:absolute;
+    left:0;
+    top:0;
+    background:#FFF;
+    z-index:9900;
+    padding:10px;
+    border-radius:10px;
+}
+ 
+#mascara{
+    display:none;
+    position:absolute;
+    left:0;
+    top:0;
+    z-index:9000;
+    background-color:#000;
+}
+ 
+.fechar{display:block; text-align:right;}

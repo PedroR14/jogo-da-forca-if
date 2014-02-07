@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -274,6 +275,7 @@ public class ForcaDAO implements ForcaRepositorio{
 			stm.setInt(2, id_usuario);
 			stm.executeUpdate();
 			stm.close();
+			salvar_historico(id_usuario, pontos, 1);
 		}catch(SQLException ex){
 			throw new RuntimeException(ex);
 		}
@@ -328,6 +330,24 @@ public class ForcaDAO implements ForcaRepositorio{
 			rs.close();
 			stm.close();
 			return forcas;
+		}catch(SQLException ex){
+			throw new RuntimeException(ex);
+		}
+	}
+	
+	public void salvar_historico(Integer id_usuario, Integer pontos, Integer vitoria){
+		try{
+			Date data = new Date();
+			Connection conexao = dataSource.getConnection();
+			String sql = "insert into historico (id_usuario, vitoria, pontos, data) "
+					+ "values (?,?,?,?)";
+			PreparedStatement stm = conexao.prepareStatement(sql);
+			stm.setInt(1, id_usuario);
+			stm.setInt(2, vitoria);
+			stm.setInt(3, pontos);
+			stm.setDate(4,new java.sql.Date(data.getTime()));
+			stm.executeUpdate();
+			stm.close();
 		}catch(SQLException ex){
 			throw new RuntimeException(ex);
 		}

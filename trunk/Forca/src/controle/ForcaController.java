@@ -41,6 +41,9 @@ public class ForcaController {
 	@Autowired
 	private Forca forca;
 	
+	@Autowired
+	private Usuario usuario;
+	
 	private  String[] palavra_array;
 	
 	private int acertos;

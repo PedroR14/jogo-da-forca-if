@@ -129,4 +129,65 @@ public class UsuarioDAO implements UsuarioRepositorio {
 			throw new RuntimeException(ex);
 		}
 	}
+
+	@Override
+	public List<Integer> getPontos_Ranking() {
+		try{
+			Connection conexao = dataSource.getConnection();
+			Statement stm = conexao.createStatement();
+			String sql = "select * from pontuacao ORDER BY pontos DESC";
+			ResultSet rs = stm.executeQuery(sql);
+			ArrayList<Integer> pontos = new ArrayList<>();
+			while(rs.next()){
+				pontos.add( rs.getInt("pontos"));
+			}
+			rs.close();
+			stm.close();
+			return pontos;
+		}catch(SQLException ex){
+			throw new RuntimeException(ex);
+		}
+	}
+
+	@Override
+	public List<Integer> getUsuario_Ranking() {
+		try{
+			Connection conexao = dataSource.getConnection();
+			Statement stm = conexao.createStatement();
+			String sql = "select * from pontuacao ORDER BY pontos DESC";
+			ResultSet rs = stm.executeQuery(sql);
+			ArrayList<Integer> usuarios = new ArrayList<>();
+			while(rs.next()){
+				usuarios.add( rs.getInt("id_usuario"));
+			}
+			rs.close();
+			stm.close();
+			return usuarios;
+		}catch(SQLException ex){
+			throw new RuntimeException(ex);
+		}
+	}
+
+	public Integer getRanking_Data(Integer id_usuario,String inicio, String fim) {
+		try{
+			Connection conexao = dataSource.getConnection();
+			Statement stm = conexao.createStatement();
+			String sql = "select sum(pontos) from historico where data <= '"+fim+"' "
+					+ "and data >= '"+inicio+"' and id_usuario ="+id_usuario;
+			ResultSet rs = stm.executeQuery(sql);
+			int pontos = 0;
+			ArrayList<Integer> usuarios = new ArrayList<>();
+			while(rs.next()){
+				pontos = rs.getInt("sum(pontos)");
+				System.out.println("prs:"+rs.getInt("sum(pontos)"));
+			}
+			System.out.println("pf:"+pontos);
+			rs.close();
+			stm.close();
+			return pontos;
+		}catch(SQLException ex){
+			throw new RuntimeException(ex);
+		}
+	}
+
 }
