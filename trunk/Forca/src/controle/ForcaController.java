@@ -56,7 +56,8 @@ public class ForcaController {
 	
 	@RequestMapping(value="inserir_categoria")
 	public String criarcategoria(Model model){
-	
+		
+		model.addAttribute("categorias", service.getTotas_categoria());
 		model.addAttribute("categoria", new Categoria());
 		
 		return "criar_categoria";
@@ -150,9 +151,18 @@ public class ForcaController {
 			return "criar_categoria";
 		}
 		
+		List<Categoria> categorias = service.getTotas_categoria();
+		
+		for (int i = 0; i < categorias.size(); i++) {
+			if(categorias.get(i).getTipocategoria().equalsIgnoreCase(categoria.getTipocategoria())){
+				model.addAttribute("mensagem", "Categoria já existe!");
+				return"criar_categoria";
+			}
+		}
+		
 		service.CriarCategoria(categoria);
 				
-		return "main";
+		return "redirect:/main";
 	}
 	
 	@RequestMapping(value="criar_forca")
