@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import dominio.AlgoritmoDerpofoldao;
+import dominio.ComparadorRanking;
 import dominio.EnviarRanking;
 import dominio.Forca;
 import dominio.ForcaService;
@@ -115,6 +118,12 @@ public class UsuarioController {
 			System.out.println(usuario_pontos.get(i).getPontos()+" pts "+usuario_pontos.get(i).getId_usuario());
 		}
 		
+		ComparadorRanking comparador = new ComparadorRanking();
+		Collections.sort(usuario_pontos, comparador);
+		
+		for (int i = 0; i < usuario_pontos.size(); i++) {
+			System.out.println("ordenado "+usuario_pontos.get(i).getPontos()+" pts "+usuario_pontos.get(i).getId_usuario());
+		}
 		
 		List<Integer> pontos = service.getPontos_Ranking();
 		
@@ -211,7 +220,7 @@ public class UsuarioController {
 					usuario.setid(id_usuario);
 				}
 				
-				service.inserir(usuario);
+				service.inserir(usuario,0);
 				model.addAttribute("mensagem", "Usuario cadastrado com sucesso.");
 				return "forward:/usuario/logar";
 			}

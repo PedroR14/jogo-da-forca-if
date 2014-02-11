@@ -11,8 +11,8 @@ public class UsuariosService {
 	@Autowired
 	private UsuarioRepositorio repositorio;
 	
-	public void inserir(Usuario cliente){
-		repositorio.inserir(cliente);
+	public void inserir(Usuario cliente, Integer tipo_usuario){
+		repositorio.inserir(cliente, tipo_usuario);
 	}
 	public void atualizar(Usuario cliente){
 		repositorio.atualizar(cliente);

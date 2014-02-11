@@ -107,13 +107,17 @@
   		<button type="submit" class="btn btn-primary" value="Login">Criar Forca</button>
   	</div>
 
-<c:url var="url2" value="/inserir_categoria"/>
 <c:url var="url3" value="/criar_forca"/>
 <c:url var="url4" value="/ranking"/>
 
-<a href="${url2}">Categoria</a>
 <a href="${url3}">Criar forca</a>
 <a href="${url4}">Ranking</a>
+
+	<c:if test = "${usuario.tipo_usuario == 1}">
+  		<c:url var="url2" value="/inserir_categoria"/>
+		<a href="${url2}">Categoria</a>
+	</c:if>
+	
 
 <!-- <div id=notificacoes></div> -->
 <div class = forcas ></div>

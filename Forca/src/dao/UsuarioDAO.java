@@ -45,16 +45,17 @@ public class UsuarioDAO implements UsuarioRepositorio {
 		}
 	}
 	
-	public void inserir(Usuario usuario) {
+	public void inserir(Usuario usuario, Integer tipo_usuario) {
 		try{
 			Connection conexao = dataSource.getConnection();
-			String sql = "insert into usuarios (id ,nome, login, email, senha) values (? ,?, ?, ?, ?)";
+			String sql = "insert into usuarios (id ,nome, login, email, senha) values (? ,?, ?, ?, ?, ?)";
 			PreparedStatement stm = conexao.prepareStatement(sql);
 			stm.setInt(1, usuario.getid());
 			stm.setString(2, usuario.getNome());
 			stm.setString(3, usuario.getlogin());
 			stm.setString(4, usuario.getemail());
 			stm.setString(5, usuario.getSenha());
+			stm.setInt(6, tipo_usuario);
 			stm.executeUpdate();
 			stm.close();
 			inserir_pontuacao(usuario.getid());

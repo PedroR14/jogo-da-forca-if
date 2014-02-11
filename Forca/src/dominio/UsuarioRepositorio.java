@@ -3,7 +3,7 @@ package dominio;
 import java.util.List;
 
 public interface UsuarioRepositorio {
-	void inserir(Usuario cliente);
+	void inserir(Usuario cliente, Integer tipo_usuario);
 	void atualizar(Usuario cliente);
 	void excluir(Integer codigoCliente);
 	Usuario getPorid(Integer codigoCliente);
