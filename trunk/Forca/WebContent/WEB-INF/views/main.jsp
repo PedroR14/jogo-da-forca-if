@@ -109,12 +109,12 @@
 
 <c:url var="url3" value="/criar_forca"/>
 <c:url var="url4" value="/ranking"/>
+<c:url var="url2" value="/inserir_categoria"/>
 
 <a href="${url3}">Criar forca</a>
 <a href="${url4}">Ranking</a>
 
 	<c:if test = "${usuario.tipo_usuario == 1}">
-  		<c:url var="url2" value="/inserir_categoria"/>
 		<a href="${url2}">Categoria</a>
 	</c:if>
 	

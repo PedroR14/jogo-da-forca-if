@@ -3,6 +3,10 @@ package dominio;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -12,11 +16,17 @@ public class Forca {
 	@Autowired
 	private ForcaService service;
 	
+	@NotNull
 	private int id_forca;
+	@NotNull
 	private int id_usuario;
+	@NotNull
 	private int cod_categoria;
+	@NotNull @Pattern(regexp = "^[\\w\\-]+(\\.[\\w\\-]+)*@([A-Za-z0-9-]+\\.)+[A-Za-z]{2,4}$", message="Palavra com formato incorreto.")
 	private String palavra;
+	@NotNull @Size(min=5, max=130)
 	private String dica;
+	@NotNull
 	private int tem_desafio;
 	
 	public Forca(int id_forca,int id_usuario,int cod_categoria,String palavra,

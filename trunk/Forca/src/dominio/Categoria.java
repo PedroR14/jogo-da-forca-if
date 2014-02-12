@@ -1,8 +1,14 @@
 package dominio;
 
+import javax.validation.constraints.Size;
+
+import com.sun.istack.internal.NotNull;
+
 public class Categoria {
 	
+	@NotNull
 	int idcategoria;
+	@NotNull @Size(min=3)
 	String Tipocategoria;
 	
 	public int getIdcategoria() {

@@ -10,6 +10,7 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.hibernate.validator.constraints.Email;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,12 +20,17 @@ public class Usuario {
 	@Autowired
 	private UsuariosService service;
 	
+	@NotNull
 	private Integer id;
-	@NotNull @Size(min=5)
-	private String nome; 
+	@NotNull(message="Campo Obrigatorio") @Size(min=5, max=50, message = "Tamanho Minimo 5 e Maximo 50")
+	private String nome;
+	@NotNull(message = "Campo Obrigatorio!")
 	private String login;
+	@NotNull(message = "Campo Obrigatorio!") @Email
 	private String email;
+	@NotNull(message = "Campo Obrigatorio!")
 	private String senha;
+	@NotNull(message = "Campo Obrigatorio!")
 	private int tipo_usuario;
 	
 	public Usuario() {}
@@ -100,10 +106,6 @@ public class Usuario {
 		for (int i = 0; i < usuarios.size(); i++) {
 			UsuarioPontos usuario = new UsuarioPontos();
 			Integer id = usuarios.get(i).getid();
-			System.out.println(inicio);
-			System.out.println(fim);
-			System.out.println(id);
-			System.out.println(service.getRanking_Data(id, inicio, fim));
 			usuario.setPontos(service.getRanking_Data(usuarios.get(i).getid(), inicio, fim));
 			usuario.setId_usuario(usuarios.get(i).getid());
 			usuario_pontos.add(usuario);

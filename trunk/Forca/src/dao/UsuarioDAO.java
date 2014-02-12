@@ -34,6 +34,7 @@ public class UsuarioDAO implements UsuarioRepositorio {
 				u.setlogin(rs.getString("login"));
 				u.setemail(rs.getString("email"));
 				u.setSenha(rs.getString("senha"));
+				u.setTipo_usuario(rs.getInt("tipo_usuario"));
 				usuarios.add(u);
 			}
 			System.out.println("get_todos");
@@ -48,7 +49,7 @@ public class UsuarioDAO implements UsuarioRepositorio {
 	public void inserir(Usuario usuario, Integer tipo_usuario) {
 		try{
 			Connection conexao = dataSource.getConnection();
-			String sql = "insert into usuarios (id ,nome, login, email, senha) values (? ,?, ?, ?, ?, ?)";
+			String sql = "insert into usuarios (id ,nome, login, email, senha, tipo_usuario) values (? ,?, ?, ?, ?, ?)";
 			PreparedStatement stm = conexao.prepareStatement(sql);
 			stm.setInt(1, usuario.getid());
 			stm.setString(2, usuario.getNome());
