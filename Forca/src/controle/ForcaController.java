@@ -55,7 +55,13 @@ public class ForcaController {
 	
 	
 	@RequestMapping(value="inserir_categoria")
-	public String criarcategoria(Model model){
+	public String criarcategoria(Model model,HttpSession session){
+		
+		Usuario usuario = (Usuario) session.getAttribute("usuario");
+		
+		if(usuario == null || usuario.getTipo_usuario() != 1){
+			return "redirect:/main";
+		}
 		
 		model.addAttribute("categorias", service.getTotas_categoria());
 		model.addAttribute("categoria", new Categoria());
@@ -146,9 +152,15 @@ public class ForcaController {
 	
 	@RequestMapping(value="categoria/salvar", method=RequestMethod.POST)
 	public String salvar(@Valid Categoria categoria, BindingResult result, 
-			Model model){
+			Model model,HttpSession session){
 		if(result.hasErrors()){
-			return "criar_categoria";
+			return "forward:/inserir_categoria";
+		}
+		
+		Usuario usuario = (Usuario) session.getAttribute("usuario");
+		
+		if(usuario == null || usuario.getTipo_usuario() != 1){
+			return "redirect:/main";
 		}
 		
 		List<Categoria> categorias = service.getTotas_categoria();
@@ -156,17 +168,18 @@ public class ForcaController {
 		for (int i = 0; i < categorias.size(); i++) {
 			if(categorias.get(i).getTipocategoria().equalsIgnoreCase(categoria.getTipocategoria())){
 				model.addAttribute("mensagem", "Categoria já existe!");
-				return"criar_categoria";
+				return"forward:/inserir_categoria";
 			}
 		}
 		
 		service.CriarCategoria(categoria);
 				
-		return "redirect:/main";
+		return "main";
 	}
 	
 	@RequestMapping(value="criar_forca")
 	public String criarforca(Model model){
+		
 		
 		model.addAttribute("forca", new Forca());
 		model.addAttribute("categoria", new Categoria());
@@ -181,7 +194,7 @@ public class ForcaController {
 	public String salvarForca(@Valid Forca forca, BindingResult result, 
 			Model model,HttpSession session){
 		if(result.hasErrors()){
-			return "criar_forca";
+			return "redirect:/criar_forca";
 		}
 		
 		AlgoritmoDerpofoldao derpofoldao = new AlgoritmoDerpofoldao();

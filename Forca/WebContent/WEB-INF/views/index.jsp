@@ -64,6 +64,7 @@
     			<form:errors path="usuario.senha" cssStyle="color:red"/>
   			</div>
   			<button type="submit" class="btn btn-primary" value="Login">Cadastrar</button>
+  			${mensagemerroinsercao}
 		</form>
 	</div>
 	

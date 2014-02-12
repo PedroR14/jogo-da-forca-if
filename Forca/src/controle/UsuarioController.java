@@ -198,11 +198,22 @@ public class UsuarioController {
 		try{
 			if(usuario.getid() == null){
 				if(result.hasErrors()){
-					return "login";
+					return "index";
 				}
 				AlgoritmoDerpofoldao derpofoldao = new AlgoritmoDerpofoldao();
 				
 				List<Usuario> usuarios = service.getTodos();
+				
+				for (int i = 0; i < usuarios.size(); i++) {
+					if(usuarios.get(i).getlogin().equalsIgnoreCase(usuario.getlogin())){
+						model.addAttribute("mensagem erro insercao", "login já existe");
+						return "index";
+					}
+					if(usuarios.get(i).getemail().equalsIgnoreCase(usuario.getemail())){
+						model.addAttribute("mensagemerroinsercao", "email já existe");
+						return "index";
+					}
+				}
 				
 				int id_usuario = derpofoldao.gerarNumero();
 				int i = usuarios.size() - 1;
@@ -220,7 +231,7 @@ public class UsuarioController {
 					usuario.setid(id_usuario);
 				}
 				
-				service.inserir(usuario,0);
+				service.inserir(usuario,1);
 				model.addAttribute("mensagem", "Usuario cadastrado com sucesso.");
 				return "forward:/usuario/logar";
 			}
