@@ -101,12 +101,24 @@ public class Usuario {
 		
 		List<UsuarioPontos> usuario_pontos = new ArrayList<UsuarioPontos>();
 		
-		System.out.println("f "+usuarios.get(0).getlogin()+"i "+usuarios.get(0).getid());
-		
 		for (int i = 0; i < usuarios.size(); i++) {
 			UsuarioPontos usuario = new UsuarioPontos();
 			Integer id = usuarios.get(i).getid();
 			usuario.setPontos(service.getRanking_Data(usuarios.get(i).getid(), inicio, fim));
+			usuario.setId_usuario(usuarios.get(i).getid());
+			usuario_pontos.add(usuario);
+		}
+		
+		return usuario_pontos;
+	}
+public List<UsuarioPontos> gerar_ranking_dias(List<Usuario> usuarios, Integer dias){
+		
+		List<UsuarioPontos> usuario_pontos = new ArrayList<UsuarioPontos>();
+		
+		for (int i = 0; i < usuarios.size(); i++) {
+			UsuarioPontos usuario = new UsuarioPontos();
+			Integer id = usuarios.get(i).getid();
+			usuario.setPontos(service.getRanking_Dias(usuarios.get(i).getid(), dias));
 			usuario.setId_usuario(usuarios.get(i).getid());
 			usuario_pontos.add(usuario);
 		}

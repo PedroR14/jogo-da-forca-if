@@ -5,12 +5,30 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-	<link rel="stylesheet" type="text/css" href="<c:url value="/resources/css/bootstrap.css" />" />
-	<link rel="stylesheet" type="text/css" href="<c:url value="/resources/css/main.css" />" />
+	
 	<script src="<c:url value="/resources/css/jquery.js" />"></script>
 	<script type="text/javascript">
 	
 		var quant = 0;
+		
+		function ranking_dias(dias){
+			
+			 $.ajax({
+				url:'ranking_dias',
+				type: 'post',
+				dataType: 'json',
+				data: {dias:dias},
+				success: function (data) {
+			
+				},
+				error: function () {
+					console.log('Deu erro');
+				}
+			});
+			 
+		}
+		
+		
 		
 		function listar_forcas(){
 		
@@ -29,12 +47,19 @@
 					}
 				
 			    		texto = texto + '<div class = botoes>';
+			    		texto = texto + '<ul class="pager">';
+			    		if(quant == 0){
+			    			texto = texto + '<li class="previous disabled" onclick = "voltar_pagina()" ><a href="">&larr; Anterior</a></li>';
+			    		}
 			    		if(quant != 0){
-			    			texto = texto + '<input type = "submit" value = "<- Anterior" onclick = "voltar_pagina()" style = "font-size: 10 pt; font-family: Verdana"> ';
+			    			texto = texto + '<li class="previous" onclick = "voltar_pagina()" ><a href="">&larr; Anterior</a></li> ';
 			    		}
 			    		if(forcas.length == 5 && data.possui_prox == true){
-			    			texto = texto + '<input type = "submit" value = "Proximo ->" onclick = "passar_pagina()" style = "font-size: 10 pt; font-family: Verdana"> ';
+			    			texto = texto + '<li class="next" onclick = "passar_pagina()" ><a href="">Proxima &rarr; </a></li> ';
+			    		}else{
+			    			texto = texto + '<li class="next disabled" onclick = "passar_pagina()" ><a href="">Proxima &rarr; </a></li> ';
 			    		}
+			    		texto = texto + '</ul>';
 			    		texto = texto + '</div>';
 						$(".forcas").append(texto);
 				},
@@ -57,18 +82,47 @@
 			listar_forcas();
 		}
 		
-		function mostrar_ranking(){
+		function mostrar_dias(dias){
 			$.ajax({
-				url:'mostraranking',
+				url:'ranking_dias',
 				type: 'get',
+				data: {dias:dias},
 				dataType: 'json',
 				success: function (data) {
-					var texto = '';
+					if(dias == 8){
+						var texto = 'Top 5 Semanal<br><hr>';
+					}else{
+						var texto = 'Top 5 Mensal<br><hr>';
+					}
 					for(var i=0; i < 5; i++){
 						if(data.usuarios[i] != null){
 							texto = texto +  data.usuarios[i] +'  ' + data.pontos[i]+'<br><hr>';
 						}
 					}
+					texto = texto + '<button type="submit" class="btn btn-primary" value="MaisRanking">Ver Mais Ranking</button>';
+					$("#usuarios").empty();
+					$("#usuarios").append(texto);
+				},
+				error: function () {
+					console.log('Deu erro');
+				}
+			});
+		}
+		
+		function mostrar_geral(){
+			$.ajax({
+				url:'mostraranking',
+				type: 'get',
+				dataType: 'json',
+				success: function (data) {
+					var texto = 'Top 5 Geral<br><hr>';
+					for(var i=0; i < 5; i++){
+						if(data.usuarios[i] != null){
+							texto = texto +  data.usuarios[i] +'  ' + data.pontos[i]+'<br><hr>';
+						}
+					}
+					texto = texto + '<button type="submit" class="btn btn-primary" value="MaisRanking">Ver Mais Ranking</button>';
+					$("#usuarios").empty();
 					$("#usuarios").append(texto);
 				},
 				error: function () {
@@ -81,12 +135,12 @@
 		$(function(){
 			quant = 0;
 			listar_forcas();
-			mostrar_ranking();
-			//$("#forcas").load('http://localhost:8080/spring/listaforcas');
-			//$("#usuarios").load('http://localhost:8080/spring/lista_usuarios');
+			mostrar_geral();
 			$("#notificacoes").load('http://localhost:8080/spring/usuario/notificacoes');
 		});
 	</script>
+	<link rel="stylesheet" type="text/css" href="<c:url value="/resources/css/bootstrap.css" />" />
+	<link rel="stylesheet" type="text/css" href="<c:url value="/resources/css/main.css" />" />
 	<title>Principal</title>
 </head>
 <body>
@@ -99,13 +153,14 @@
 			<div class="navbar-header">
     			<h1> Jogo da Forca </h1>
     		</div>
-    			<h4 class="navbar-brand">Olá,${usuario.nome}, você possui ${pontos} pts<h4>
-    			<a href="${url}/editar?id=${usuario.id}">EDITAR PERFIL</a>
+    			<h4 class="navbar-brand">Olá,${sessionScope.usuario.nome}, você possui ${pontos} pts<h4>
+    			<a href="${url}/editar?id=${sessionScope.usuario.id}">EDITAR PERFIL</a>
 		</nav>
   	</header>
   	<div class="criar">
   		<button type="submit" class="btn btn-primary" value="Login">Criar Forca</button>
   	</div>
+
 
 <c:url var="url3" value="/criar_forca"/>
 <c:url var="url4" value="/ranking"/>
@@ -121,6 +176,11 @@
 
 <!-- <div id=notificacoes></div> -->
 <div class = forcas ></div>
+<div class="btn-group">
+  <button type="button" onclick = "mostrar_dias(8)" class="btn btn-default">Semana</button>
+  <button type="button" onclick = "mostrar_dias(30)" class="btn btn-default">Mês</button>
+  <button type="button" onclick = "mostrar_geral()" class="btn btn-default">Geral</button>
+</div>
 <div id=usuarios ></div>
 
 	
