@@ -37,7 +37,6 @@ public class UsuarioDAO implements UsuarioRepositorio {
 				u.setTipo_usuario(rs.getInt("tipo_usuario"));
 				usuarios.add(u);
 			}
-			System.out.println("get_todos");
 			rs.close();
 			stm.close();
 			return usuarios;
@@ -176,6 +175,26 @@ public class UsuarioDAO implements UsuarioRepositorio {
 			System.out.println("funçaao");
 			Connection conexao = dataSource.getConnection();
 			String sql = "select sum(pontos) from historico where data BETWEEN '"+inicio+"' and '"+fim+"' and id_usuario = "+id_usuario;
+			PreparedStatement stm = conexao.prepareStatement(sql);
+			ResultSet rs = stm.executeQuery(sql);
+			Integer pontos = 0;
+			while(rs.next()){
+				pontos = rs.getInt("sum(pontos)");
+			}
+			System.out.println(pontos);
+			rs.close();
+			stm.close();
+			return pontos;
+		}catch(SQLException ex){
+			throw new RuntimeException(ex);
+		}
+	}
+
+	@Override
+	public Integer getRanking_Dias(Integer id_usuario, Integer dias) {
+		try{
+			Connection conexao = dataSource.getConnection();
+			String sql = "SELECT sum(pontos) FROM historico WHERE id_usuario="+id_usuario+" and data BETWEEN CURDATE() - INTERVAL "+dias+" DAY AND CURDATE()";
 			PreparedStatement stm = conexao.prepareStatement(sql);
 			ResultSet rs = stm.executeQuery(sql);
 			Integer pontos = 0;

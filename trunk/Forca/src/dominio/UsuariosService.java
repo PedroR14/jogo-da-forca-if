@@ -40,4 +40,8 @@ public class UsuariosService {
 		return repositorio.getRanking_Data(id_usuario,inicio,fim);
 	}
 	
+	public Integer getRanking_Dias(Integer id_usuario, Integer dias){
+		return repositorio.getRanking_Dias(id_usuario, dias);
+	}
+	
 }

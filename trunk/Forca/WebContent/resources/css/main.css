@@ -42,10 +42,10 @@ text-align:center;
 }
 #usuarios {
 position:absolute;
-top:57%;
+top:62%;
 left:120%;
 width:200px;
-height:300px;
+height:425px;
 margin-left:-500px;
 margin-top:-250px;
 text-align:center;
@@ -65,26 +65,12 @@ border-style: solid;
 border-color: #aaaaaa;
 }
 
-.window{
-    display:none;
-    width:550px;
-    height:400px;
-    position:absolute;
-    left:0;
-    top:0;
-    background:#FFF;
-    z-index:9900;
-    padding:10px;
-    border-radius:10px;
+.btn-group{
+	position:absolute;
+	top:50%;
+	left:120%;
+	width:200px;
+	height:300px;
+	margin-left:-500px;
+	margin-top:-250px;
 }
- 
-#mascara{
-    display:none;
-    position:absolute;
-    left:0;
-    top:0;
-    z-index:9000;
-    background-color:#000;
-}
- 
-.fechar{display:block; text-align:right;}

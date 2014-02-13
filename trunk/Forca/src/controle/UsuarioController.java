@@ -114,21 +114,41 @@ public class UsuarioController {
 		
 		List<UsuarioPontos> usuario_pontos = usuario.gerar_ranking_data(service.getTodos(), usuario.data_sql(inicio), usuario.data_sql(fim));
 		
+		ComparadorRanking comparador = new ComparadorRanking();
+		Collections.sort(usuario_pontos, comparador);
+		
+		List<Integer> pontos = new ArrayList<Integer>();
+		
+		
+		List<String> usuarios_nomes = new ArrayList<String>();
+		
 		for (int i = 0; i < usuario_pontos.size(); i++) {
-			System.out.println(usuario_pontos.get(i).getPontos()+" pts "+usuario_pontos.get(i).getId_usuario());
+			usuarios_nomes.add(usuario.getNome_porId(usuario_pontos.get(i).getId_usuario()));
+			pontos.add(usuario_pontos.get(i).getPontos());
 		}
+		
+		
+		return new EnviarRanking(usuarios_nomes,pontos);
+	}
+	
+	@RequestMapping(value="usuario/ranking_dias")
+	public @ResponseBody EnviarRanking Ranking_dias (Integer dias, Model model, HttpServletResponse response,
+			HttpSession session) throws IOException, ParseException{
+		
+		List<Usuario> usuarios = service.getTodos();
+		
+		List<UsuarioPontos> usuario_pontos = usuario.gerar_ranking_dias(service.getTodos(), dias);
 		
 		ComparadorRanking comparador = new ComparadorRanking();
 		Collections.sort(usuario_pontos, comparador);
 		
-		for (int i = 0; i < usuario_pontos.size(); i++) {
-			System.out.println("ordenado "+usuario_pontos.get(i).getPontos()+" pts "+usuario_pontos.get(i).getId_usuario());
-		}
-		
-		List<Integer> pontos = service.getPontos_Ranking();
-		
-		
+		List<Integer> pontos = new ArrayList<Integer>();
 		List<String> usuarios_nomes = new ArrayList<String>();
+		
+		for (int i = 0; i < usuario_pontos.size(); i++) {
+			usuarios_nomes.add(usuario.getNome_porId(usuario_pontos.get(i).getId_usuario()));
+			pontos.add(usuario_pontos.get(i).getPontos());
+		}
 		
 		
 		return new EnviarRanking(usuarios_nomes,pontos);
