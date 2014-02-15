@@ -144,5 +144,30 @@ public class Forca {
 		}
 		return  true;
 	}
+	
+	public Integer gerar_id_forca(){
+		
+		AlgoritmoDerpofoldao derpofoldao = new AlgoritmoDerpofoldao();
+		List<Forca> forcas = service.getTodasForca_semexcessao();
+		
+		int id_forca = derpofoldao.gerarNumero();
+		int retorno = id_forca;
+		int i = forcas.size() - 1;
+		if(forcas.size() != 0){
+			while(i>=0){
+				if(id_forca != forcas.get(i).getId_forca()){
+					retorno = id_forca;
+					i--;
+				} else if (id_forca == forcas.get(i).getId_forca()){
+					id_forca = derpofoldao.gerarNumero();
+					i = forcas.size() - 1;
+				}
+			}	
+		}else{
+			return id_forca;
+		}
+		
+		return retorno;
+	}
 
 }
