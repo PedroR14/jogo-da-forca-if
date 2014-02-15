@@ -20,6 +20,12 @@ public class Usuario {
 	@Autowired
 	private UsuariosService service;
 	
+	@Autowired
+	private ForcaService service_forca;
+	
+	@Autowired
+	private Forca forca;
+	
 	@NotNull
 	private Integer id;
 	@NotNull(message="Campo Obrigatorio") @Size(min=5, max=50, message = "Tamanho Minimo 5 e Maximo 50")
@@ -111,7 +117,7 @@ public class Usuario {
 		
 		return usuario_pontos;
 	}
-public List<UsuarioPontos> gerar_ranking_dias(List<Usuario> usuarios, Integer dias){
+	public List<UsuarioPontos> gerar_ranking_dias(List<Usuario> usuarios, Integer dias){
 		
 		List<UsuarioPontos> usuario_pontos = new ArrayList<UsuarioPontos>();
 		
@@ -124,6 +130,26 @@ public List<UsuarioPontos> gerar_ranking_dias(List<Usuario> usuarios, Integer di
 		}
 		
 		return usuario_pontos;
+	}
+
+	public void EnviarDesafio(Forca forca_criada, Integer aposta, Usuario usuario, Integer id_destinatario){
+		
+		Desafio desafio = new Desafio();
+		
+		desafio.setId_usuario_destinatario(id_destinatario);
+		
+		forca_criada.setId_forca(forca.gerar_id_forca());
+		forca_criada.setTem_desafio(1);
+		desafio.setId_forca(forca_criada.getId_forca());
+		desafio.setAposta(aposta);
+		desafio.setId_usuario_remetente(usuario.getid());
+		
+		forca_criada.setId_usuario(usuario.getid());
+		service_forca.Desafiar(desafio);
+		service_forca.CriarForca(forca_criada);
+		service_forca.Notificar(desafio.getId_usuario_destinatario(), "Você foi desafiado pelo usuario "+
+		usuario.getlogin());
+		
 	}
 	
 }

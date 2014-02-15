@@ -201,7 +201,6 @@ public class UsuarioDAO implements UsuarioRepositorio {
 			while(rs.next()){
 				pontos = rs.getInt("sum(pontos)");
 			}
-			System.out.println(pontos);
 			rs.close();
 			stm.close();
 			return pontos;

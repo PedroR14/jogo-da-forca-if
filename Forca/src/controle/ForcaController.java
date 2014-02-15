@@ -244,48 +244,15 @@ public class ForcaController {
 	
 	@RequestMapping(value="desafio/salvar", method=RequestMethod.POST)
 	public String salvardesafio(@Valid Forca forca, BindingResult result, 
-			@RequestParam("id_destin") Integer id_destin,int aposta,Model model,HttpSession session){
+			@RequestParam("id_destin") Integer id_destinatario,int aposta,Model model,HttpSession session){
 		
 		if(result.hasErrors()){
 			return "desafio";
 		}
 		
-		Desafio desafio = new Desafio();
-		AlgoritmoDerpofoldao derpofoldao = new AlgoritmoDerpofoldao();
-		Usuario usuario = (Usuario)session.getAttribute("usuario");
+		Usuario usuario_remetente = (Usuario)session.getAttribute("usuario");
 		
-		
-		List<Forca> forcas = service.getTodasForca_semexcessao();
-		List<Usuario> usuarios = service_usuario.getTodos();
-		
-				desafio.setId_usuario_destinatario(id_destin);
-		
-		
-		int id_forca = derpofoldao.gerarNumero();
-		int i = forcas.size() - 1;
-		if(forcas.size() != 0){
-			while(i>=0){
-				if(id_forca != forcas.get(i).getId_forca()){
-					forca.setId_forca(id_forca);
-					i--;
-				} else if (id_forca == forcas.get(i).getId_forca()){
-					id_forca = derpofoldao.gerarNumero();
-					i = forcas.size() - 1;
-				}
-			}	
-		}else{
-			forca.setId_forca(id_forca);
-		}
-		forca.setTem_desafio(1);
-		desafio.setId_forca(id_forca);
-		desafio.setAposta(aposta);
-		desafio.setId_usuario_remetente(usuario.getid());
-		
-		forca.setId_usuario(usuario.getid());
-		service.Desafiar(desafio);
-		service.CriarForca(forca);
-		service.Notificar(desafio.getId_usuario_destinatario(), "Você foi desafiado pelo usuario"+
-		usuario.getlogin());
+		usuario.EnviarDesafio(forca, aposta, usuario_remetente, id_destinatario);
 				
 		return "main";
 	} 

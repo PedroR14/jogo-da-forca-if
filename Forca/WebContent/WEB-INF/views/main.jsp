@@ -9,6 +9,9 @@
 	<script src="<c:url value="/resources/css/jquery.js" />"></script>
 	<script type="text/javascript">
 	
+	
+		
+	
 		var quant = 0;
 		
 		function ranking_dias(dias){
@@ -48,16 +51,11 @@
 				
 			    		texto = texto + '<div class = botoes>';
 			    		texto = texto + '<ul class="pager">';
-			    		if(quant == 0){
-			    			texto = texto + '<li class="previous disabled" onclick = "voltar_pagina()" ><a href="">&larr; Anterior</a></li>';
-			    		}
 			    		if(quant != 0){
-			    			texto = texto + '<li class="previous" onclick = "voltar_pagina()" ><a href="">&larr; Anterior</a></li> ';
+			    			texto = texto + '<li class="previous" onclick = "voltar_pagina()" ><a>&larr; Anterior</a></li> ';
 			    		}
 			    		if(forcas.length == 5 && data.possui_prox == true){
-			    			texto = texto + '<li class="next" onclick = "passar_pagina()" ><a href="">Proxima &rarr; </a></li> ';
-			    		}else{
-			    			texto = texto + '<li class="next disabled" onclick = "passar_pagina()" ><a href="">Proxima &rarr; </a></li> ';
+			    			texto = texto + '<li class="next" onclick = "passar_pagina()" ><a>Proxima &rarr; </a></li> ';
 			    		}
 			    		texto = texto + '</ul>';
 			    		texto = texto + '</div>';
@@ -69,6 +67,7 @@
 			});
 		
 		}
+		
 	
 		function passar_pagina(){
 			$(".forcas").empty();
@@ -90,9 +89,9 @@
 				dataType: 'json',
 				success: function (data) {
 					if(dias == 8){
-						var texto = 'Top 5 Semanal<br><hr>';
+						var texto = '<strong>Top 5 Semanal</strong><br><hr>';
 					}else{
-						var texto = 'Top 5 Mensal<br><hr>';
+						var texto = '<strong>Top 5 Mensal</strong><br><hr>';
 					}
 					for(var i=0; i < 5; i++){
 						if(data.usuarios[i] != null){
@@ -115,7 +114,7 @@
 				type: 'get',
 				dataType: 'json',
 				success: function (data) {
-					var texto = 'Top 5 Geral<br><hr>';
+					var texto = '<strong>Top 5 Geral</strong><br><hr>';
 					for(var i=0; i < 5; i++){
 						if(data.usuarios[i] != null){
 							texto = texto +  data.usuarios[i] +'  ' + data.pontos[i]+'<br><hr>';
@@ -161,7 +160,7 @@
   		<button type="submit" class="btn btn-primary" value="Login">Criar Forca</button>
   	</div>
 
-
+	<input type="text" id="pesquisa">
 <c:url var="url3" value="/criar_forca"/>
 <c:url var="url4" value="/ranking"/>
 <c:url var="url2" value="/inserir_categoria"/>
@@ -186,7 +185,13 @@
 	
 	<footer class="nav navbar-inverse navbar-fixed-bottom">
 		<p>Jogo da Forca &copy 2014</p>
-	</footer> 
+	</footer>
 	
+	 
+	<script>
+	$("#pesquisa").focusin(function(){
+		alert("focou");
+	});
+	</script>
 </body>
 </html>
