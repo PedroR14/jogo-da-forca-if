@@ -32,7 +32,6 @@
 		}
 		
 		
-		
 		function listar_forcas(){
 		
 			var forcas = [];
@@ -135,6 +134,7 @@
 			quant = 0;
 			listar_forcas();
 			mostrar_geral();
+			//$("#lista_usuarios").load('http://localhost:8080/spring/lista_usuarios');
 			$("#notificacoes").load('http://localhost:8080/spring/usuario/notificacoes');
 		});
 	</script>
@@ -160,7 +160,7 @@
   		<button type="submit" class="btn btn-primary" value="Login">Criar Forca</button>
   	</div>
 
-	<input type="text" id="pesquisa">
+<input type="text" id="pesquisa">
 <c:url var="url3" value="/criar_forca"/>
 <c:url var="url4" value="/ranking"/>
 <c:url var="url2" value="/inserir_categoria"/>
@@ -181,6 +181,7 @@
   <button type="button" onclick = "mostrar_geral()" class="btn btn-default">Geral</button>
 </div>
 <div id=usuarios ></div>
+<div id=lista_usuarios ></div>
 
 	
 	<footer class="nav navbar-inverse navbar-fixed-bottom">
@@ -189,9 +190,30 @@
 	
 	 
 	<script>
-	$("#pesquisa").focusin(function(){
-		alert("focou");
-	});
+		
+		$( "#pesquisa" ).keyup(function() {
+			
+			var login = $("#pesquisa").val();
+			
+			 $.ajax({
+				url:'pesquisa',
+				type: 'post',
+				dataType: 'json',
+				data: {login:login},
+				success: function (data) {
+					var texto = '';
+						for(var i=0; i < data.usuarios.length; i++){
+							texto = texto +  '<br>'+'<a href="/spring/perfil_usuario?idusuario='+data.usuarios[i].id+'">'+data.usuarios[i].nome+'</a>'+'<br><hr>';
+						}
+						$("#lista_usuarios").empty();
+						$("#lista_usuarios").append(texto);
+				},
+				error: function () {
+					console.log('Deu erro');
+				}
+			});
+			 
+		});	 
 	</script>
 </body>
 </html>

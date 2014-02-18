@@ -44,4 +44,8 @@ public class UsuariosService {
 		return repositorio.getRanking_Dias(id_usuario, dias);
 	}
 	
+	public List<Usuario> getPor_Login(String login){
+		return repositorio.getPor_Login(login);
+	}
+	
 }

@@ -53,6 +53,20 @@ border: 1px;
 border-style: solid;
 border-color: #aaaaaa;
 }
+#lista_usuarios {
+position:absolute;
+top:62%;
+left:38%;
+width:212px;
+height:425px;
+margin-left:-500px;
+margin-top:-250px;
+text-align:center;
+border: 1px;
+border-style: solid;
+border-color: #aaaaaa;
+}
+
 #notificacoes {
 position:absolute;
 top:57%;

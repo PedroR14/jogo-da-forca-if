@@ -208,5 +208,28 @@ public class UsuarioDAO implements UsuarioRepositorio {
 			throw new RuntimeException(ex);
 		}
 	}
-
+	
+	@Override
+	public List<Usuario> getPor_Login(String login) {
+		try{
+			Connection conexao = dataSource.getConnection();
+			String sql = "SELECT * FROM usuarios WHERE login like'"+login+"%'";
+			PreparedStatement stm = conexao.prepareStatement(sql);
+			ResultSet rs = stm.executeQuery(sql);
+			ArrayList<Usuario> usuarios = new ArrayList<>();
+			while(rs.next()){
+				Usuario u = new Usuario();
+				u.setid( rs.getInt("id") );
+				u.setNome(rs.getString("nome"));
+				u.setlogin(rs.getString("login"));
+				u.setemail(rs.getString("email"));
+				usuarios.add(u);
+			}
+			rs.close();
+			stm.close();
+			return usuarios;
+		}catch(SQLException ex){
+			throw new RuntimeException(ex);
+		}
+	}
 }

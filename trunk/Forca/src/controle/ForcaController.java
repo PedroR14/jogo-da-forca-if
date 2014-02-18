@@ -194,7 +194,7 @@ public class ForcaController {
 	public String salvarForca(@Valid Forca forca, BindingResult result, 
 			Model model,HttpSession session){
 		if(result.hasErrors()){
-			return "redirect:/criar_forca";
+			return "criar_forca";
 		}
 		
 		AlgoritmoDerpofoldao derpofoldao = new AlgoritmoDerpofoldao();
