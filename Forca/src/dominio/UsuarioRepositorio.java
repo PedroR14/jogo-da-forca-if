@@ -12,4 +12,5 @@ public interface UsuarioRepositorio {
 	List<Integer> getUsuario_Ranking(); 
 	Integer getRanking_Data(Integer id_usuario,String inicio, String fim);
 	Integer getRanking_Dias(Integer id_usuario, Integer dias);
+	List<Usuario> getPor_Login(String login);
 }

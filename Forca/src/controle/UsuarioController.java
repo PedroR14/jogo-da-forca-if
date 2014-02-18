@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import dominio.AlgoritmoDerpofoldao;
 import dominio.ComparadorRanking;
+import dominio.EnviarPesquisa;
 import dominio.EnviarRanking;
 import dominio.Forca;
 import dominio.ForcaService;
@@ -154,6 +155,15 @@ public class UsuarioController {
 		return new EnviarRanking(usuarios_nomes,pontos);
 	}
 	
+	@RequestMapping(value="usuario/pesquisa")
+	public @ResponseBody EnviarPesquisa pesquisa_usuario (String login, Model model, HttpServletResponse response,
+			HttpSession session) throws IOException, ParseException{
+		
+		List<Usuario> usuarios = service.getPor_Login(login);
+		
+		return new EnviarPesquisa(usuarios);
+	}
+	
 	@RequestMapping(value="usuario/notificacoes")
 	public String notificacoes(
 			Model model,HttpSession session){
@@ -226,7 +236,7 @@ public class UsuarioController {
 				
 				for (int i = 0; i < usuarios.size(); i++) {
 					if(usuarios.get(i).getlogin().equalsIgnoreCase(usuario.getlogin())){
-						model.addAttribute("mensagem erro insercao", "login já existe");
+						model.addAttribute("mensagemerroinsercao", "login já existe");
 						return "index";
 					}
 					if(usuarios.get(i).getemail().equalsIgnoreCase(usuario.getemail())){
