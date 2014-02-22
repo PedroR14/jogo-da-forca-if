@@ -5,6 +5,19 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html" charset=utf-8>
+<script src="<c:url value="/resources/css/jquery.js" />"></script>
+<script src="<c:url value="/resources/css/jquery.validade.js" />"></script>
+<script type="text/javascript">
+
+	function validar(){
+		var senha = $("#senha").val();
+		var conf_senha = $("#conf_senha").val();
+		if(senha == conf_senha){
+			$("#formcadastro").submit();
+		}
+	}
+
+</script>
 <link rel="stylesheet" type="text/css" href="<c:url value="/resources/css/bootstrap.css" />" />
 <link rel="stylesheet" type="text/css" href="<c:url value="/resources/css/index.css" />" />
 <title>Acesso</title>
@@ -30,12 +43,10 @@
 		<form action="${entrar}" method="post" role="form">
 			<h3> Autentique-se! </h3>
   			<div class="form-group">
-    			<input type="text" class="form-control" id="exampleInputEmail1" placeholder="Login" name="login" value="${usuario.login}">
-    			<form:errors path="usuario.login" cssStyle="color:red"/>
+    			<input type="text" class="form-control" id="exampleInputEmail1" placeholder="Login" name="login" value="">
   			</div>
   			<div class="form-group">
-    			<input type="password" class="form-control" id="exampleInputPassword1" placeholder="Senha" name="senha" value="${usuario.senha}">
-    			<form:errors path="usuario.senha" cssStyle="color:red"/>
+    			<input type="password" class="form-control" id="exampleInputPassword1" placeholder="Senha" name="senha" value="">
   			</div>
   			<button type="submit" class="btn btn-success" value="Login">Entrar</button>
   			<a class="btn btn-warning" href="#">Esqueci minha senha</a>
@@ -45,25 +56,29 @@
 
 	<div class = cadastro >
 		<c:url var="cadastrar" value="/usuario/salvar"/>
-		<form action="${cadastrar}" method="post" role="form">
+		<form action="${cadastrar}" id="formcadastro" method="post" role="form">
 			<h3> Crie uma conta </h3>
   			<div class="form-group">
-    			<input type="text" class="form-control" id="exampleInputEmail1" placeholder="nome" name="nome" value="${usuario.nome}">
+    			<input type="text" class="form-control" id="nome" placeholder="nome" name="nome" value="${usuario.nome}">
     			<form:errors path="usuario.nome" cssStyle="color:red"/>
   			</div>
   			<div class="form-group">
-    			<input type="text" class="form-control" id="exampleInputPassword1" placeholder="login" name="login" value="${usuario.login}">
+    			<input type="text" class="form-control" id="login" placeholder="login" name="login" value="${usuario.login}">
     			<form:errors path="usuario.login" cssStyle="color:red"/>
   			</div>
   			<div class="form-group">
-    			<input type="text" class="form-control" id="exampleInputPassword1" placeholder="email" name="email" value="${usuario.email}">
+    			<input type="text" class="form-control" id="email" placeholder="email" name="email" value="${usuario.email}">
     			<form:errors path="usuario.email" cssStyle="color:red"/>
   			</div>
   			<div class="form-group">
-    			<input type="password" class="form-control" id="exampleInputPassword1" placeholder="Senha" name="senha" value="${usuario.senha}">
+    			<input type="password" class="form-control" id="senha" placeholder="Senha" name="senha" value="">
     			<form:errors path="usuario.senha" cssStyle="color:red"/>
   			</div>
-  			<button type="submit" class="btn btn-primary" value="Login">Cadastrar</button>
+  			<div class="form-group">
+    			<input type="password" class="form-control" id="conf_senha" placeholder="Confirmar Senha" name="conf_senha" value="">
+    			<form:errors path="usuario.senha" cssStyle="color:red"/>
+  			</div>
+  			<button type="submit" onclick="validar()" class="btn btn-primary" value="Login">Cadastrar</button>
   			${mensagemerroinsercao}
 		</form>
 	</div>

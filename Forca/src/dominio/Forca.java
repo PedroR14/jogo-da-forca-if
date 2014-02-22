@@ -16,17 +16,16 @@ public class Forca {
 	@Autowired
 	private ForcaService service;
 	
-	@NotNull
 	private int id_forca;
-	@NotNull
 	private int id_usuario;
-	@NotNull
 	private int cod_categoria;
-	@NotNull @Pattern(regexp = "^[\\w\\-]+(\\.[\\w\\-]+)*@([A-Za-z0-9-]+\\.)+[A-Za-z]{2,4}$", message="Palavra com formato incorreto.")
+	
+	@NotNull @Size(min=1,message="Campo Obrigatório")
 	private String palavra;
-	@NotNull @Size(min=5, max=130)
+	
+	@NotNull @Size(min=5, max=130, message="Dica deve conter de 5 a 130 Caracteres.")
 	private String dica;
-	@NotNull
+	
 	private int tem_desafio;
 	
 	public Forca(int id_forca,int id_usuario,int cod_categoria,String palavra,

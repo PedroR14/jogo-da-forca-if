@@ -156,9 +156,6 @@
     			<a href="${url}/editar?id=${sessionScope.usuario.id}">EDITAR PERFIL</a>
 		</nav>
   	</header>
-  	<div class="criar">
-  		<button type="submit" class="btn btn-primary" value="Login">Criar Forca</button>
-  	</div>
 
 <input type="text" id="pesquisa">
 <c:url var="url3" value="/criar_forca"/>

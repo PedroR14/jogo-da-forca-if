@@ -174,7 +174,7 @@ public class ForcaController {
 		
 		service.CriarCategoria(categoria);
 				
-		return "main";
+		return "redirect:/usuario/main";
 	}
 	
 	@RequestMapping(value="criar_forca")
@@ -190,11 +190,11 @@ public class ForcaController {
 		return "criar_forca";
 	}
 	
-	@RequestMapping(value="forca/salvar")
+	@RequestMapping(value="forcasalvar")
 	public String salvarForca(@Valid Forca forca, BindingResult result, 
 			Model model,HttpSession session){
 		if(result.hasErrors()){
-			return "criar_forca";
+			return "forward:/criar_forca";
 		}
 		
 		AlgoritmoDerpofoldao derpofoldao = new AlgoritmoDerpofoldao();

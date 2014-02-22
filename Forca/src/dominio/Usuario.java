@@ -26,17 +26,18 @@ public class Usuario {
 	@Autowired
 	private Forca forca;
 	
-	@NotNull
 	private Integer id;
-	@NotNull(message="Campo Obrigatorio") @Size(min=5, max=50, message = "Tamanho Minimo 5 e Maximo 50")
+	@NotNull @Size(min=5, max=50, message = "Tamanho Minimo 5 e Maximo 50")
 	private String nome;
-	@NotNull(message = "Campo Obrigatorio!")
+	
+	@NotNull @Size(min=1, message = "Campo Obrigatório")
 	private String login;
-	@NotNull(message = "Campo Obrigatorio!") @Email
+	
+	@NotNull @Size(min=1, message = "Campo Obrigatório") @Email
 	private String email;
-	@NotNull(message = "Campo Obrigatorio!")
+	
+	@NotNull @Size(min=1, message = "Campo Obrigatório")
 	private String senha;
-	@NotNull(message = "Campo Obrigatorio!")
 	private int tipo_usuario;
 	
 	public Usuario() {}
