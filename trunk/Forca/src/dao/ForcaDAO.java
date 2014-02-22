@@ -283,9 +283,20 @@ public class ForcaDAO implements ForcaRepositorio{
 
 
 	@Override
-	public void ForcaDerrota(int id_usuario) {
-		// TODO Auto-generated method stub
-		
+	public void ForcaDerrota(int id_usuario, int pontos) {
+		try{
+			Connection conexao = dataSource.getConnection();
+			String sql = "update pontuacao set pontos = pontos - ?, derrotas = derrotas + 1 "
+					+ " where id_usuario = ?";
+			PreparedStatement stm = conexao.prepareStatement(sql);
+			stm.setInt(1, pontos);
+			stm.setInt(2, id_usuario);
+			stm.executeUpdate();
+			stm.close();
+			salvar_historico(id_usuario, pontos, 1);
+		}catch(SQLException ex){
+			throw new RuntimeException(ex);
+		}
 	}
 
 

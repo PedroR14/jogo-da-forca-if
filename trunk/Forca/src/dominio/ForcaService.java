@@ -70,8 +70,8 @@ public class ForcaService {
 		forca_repositorio.ForcaVitoria(id_usuario, pontos);
 	}
 	
-	public void ForcaDerrota(int id_usuario){
-		forca_repositorio.ForcaDerrota(id_usuario);
+	public void ForcaDerrota(int id_usuario, int pontos){
+		forca_repositorio.ForcaDerrota(id_usuario, pontos);
 	}
 	
 	public int getpontos(int id_usuario){

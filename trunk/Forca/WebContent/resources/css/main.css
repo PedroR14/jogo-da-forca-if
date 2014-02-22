@@ -65,6 +65,7 @@ text-align:center;
 border: 1px;
 border-style: solid;
 border-color: #aaaaaa;
+overflow: auto;
 }
 
 #notificacoes {
