@@ -15,9 +15,15 @@ public interface ForcaRepositorio {
 	Categoria getPor_id_categoria(Integer id_categoria);
 	void CriarCategoria(Categoria categoria);
 	void Desafiar(Desafio desafio);
-	void Notificar(int id_usuario, String texto);
-	List<String> getNotificacoes(Integer id_usuario);
+	void Notificar(int id_usuario, String texto, String tipo);
+	List<Notificacao> getNotificacoes(Integer id_usuario);
+	Notificacao getNotificacao_porid(Integer id_notificacao);
 	void ForcaVitoria(int id_usuario, int pontos);
 	void ForcaDerrota(int id_usuario, int pontos);
 	int getpontos(int id_usuario);
+	boolean isDesafio(Integer id_forca);
+	Integer getApostaDesafio(Integer id_forca);
+	Integer getDestinatarioDesafio(Integer id_forca);
+	boolean VerificarId(Integer id_forca);
+	boolean VerificarId_notificacao(Integer id_notificacao);
 }

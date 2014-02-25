@@ -17,11 +17,15 @@ import dominio.Categoria;
 import dominio.Desafio;
 import dominio.Forca;
 import dominio.ForcaRepositorio;
+import dominio.Notificacao;
 
 public class ForcaDAO implements ForcaRepositorio{
 	
 	@Autowired
 	private DataSource dataSource;
+	
+	@Autowired
+	private Forca forca;
 	
 	public void CriarForca(Forca forca) {
 		try{
@@ -227,14 +231,19 @@ public class ForcaDAO implements ForcaRepositorio{
 
 
 	@Override
-	public void Notificar(int id_usuario, String texto) {
+	public void Notificar(int id_usuario, String texto, String tipo) {
 		try{
+			Date data = new Date();
 			Connection conexao = dataSource.getConnection();
-			String sql = "insert into notificacao (id_usuario, texto) "
-					+ "values (?,?)";
+			String sql = "insert into notificacao (id_notificacao,id_usuario,visualizada,texto,data,tipo) "
+					+ "values (?,?,?,?,?,?)";
 			PreparedStatement stm = conexao.prepareStatement(sql);
-			stm.setInt(1, id_usuario);
-			stm.setString(2, texto);
+			stm.setInt(1, forca.gerar_id_notificacao());
+			stm.setInt(2, id_usuario);
+			stm.setInt(3, 0);
+			stm.setString(4, texto);
+			stm.setDate(5,new java.sql.Date(data.getTime()));
+			stm.setString(6, tipo);
 			stm.executeUpdate();
 			stm.close();
 		}catch(SQLException ex){
@@ -244,7 +253,7 @@ public class ForcaDAO implements ForcaRepositorio{
 
 
 	@Override
-	public List<String> getNotificacoes(Integer id_usuario) {
+	public List<Notificacao> getNotificacoes(Integer id_usuario) {
 		
 		try{
 			Connection conexao = dataSource.getConnection();
@@ -252,10 +261,16 @@ public class ForcaDAO implements ForcaRepositorio{
 			PreparedStatement stm = conexao.prepareStatement(sql);
 			//stm.setInt(1 ,id_usuario);
 			ResultSet rs = stm.executeQuery(sql);
-			ArrayList<String> notificacoes = new ArrayList<>();
+			ArrayList<Notificacao> notificacoes = new ArrayList<>();
 			while(rs.next()){
-				String notificacao = rs.getString("texto");
-				notificacoes.add(notificacao);
+				Notificacao notify = new Notificacao();
+				notify.setId_notificacao(rs.getInt("id_notificacao"));
+				notify.setId_usuario(rs.getInt("id_usuario"));
+				notify.setTexto(rs.getString("texto"));
+				notify.setVisualizada(rs.getInt("visualizada"));
+				notify.setData(rs.getDate("data"));
+				notify.setTipo(rs.getString("tipo"));
+				notificacoes.add(notify);
 			}
 			return notificacoes;
 		}catch(SQLException ex){
@@ -359,6 +374,128 @@ public class ForcaDAO implements ForcaRepositorio{
 			stm.setDate(4,new java.sql.Date(data.getTime()));
 			stm.executeUpdate();
 			stm.close();
+		}catch(SQLException ex){
+			throw new RuntimeException(ex);
+		}
+	}
+
+
+	@Override
+	public boolean isDesafio(Integer id_forca) {
+		try{
+			Connection conexao = dataSource.getConnection();
+			Statement stm = conexao.createStatement();
+			String sql = "select * from desafio";
+			ResultSet rs = stm.executeQuery(sql);
+			while(rs.next()){
+				if(id_forca == rs.getInt("id_forca")){
+					return true;
+				}
+			}
+			rs.close();
+			stm.close();
+			return false;
+		}catch(SQLException ex){
+			throw new RuntimeException(ex);
+		}
+	}
+
+
+	@Override
+	public Integer getApostaDesafio(Integer id_forca) {
+		try{
+			Connection conexao = dataSource.getConnection();
+			Statement stm = conexao.createStatement();
+			String sql = "select * from desafio where id_forca = '"+id_forca+"'";
+			ResultSet rs = stm.executeQuery(sql);
+			while(rs.next()){
+				return rs.getInt("aposta");				
+			}
+			rs.close();
+			stm.close();
+			return null;
+		}catch(SQLException ex){
+			throw new RuntimeException(ex);
+		}
+	}
+
+
+	@Override
+	public Integer getDestinatarioDesafio(Integer id_forca) {
+		try{
+			Connection conexao = dataSource.getConnection();
+			Statement stm = conexao.createStatement();
+			String sql = "select * from desafio where id_forca = '"+id_forca+"'";
+			ResultSet rs = stm.executeQuery(sql);
+			while(rs.next()){
+				return rs.getInt("id_usuario_destinatario");				
+			}
+			rs.close();
+			stm.close();
+			return null;
+		}catch(SQLException ex){
+			throw new RuntimeException(ex);
+		}
+	}
+
+
+	@Override
+	public boolean VerificarId(Integer id_forca) {
+		try{
+			Connection conexao = dataSource.getConnection();
+			Statement stm = conexao.createStatement();
+			String sql = "select * from forcas where id_forca = "+id_forca+"";
+			ResultSet rs = stm.executeQuery(sql);
+			while(rs.next()){
+				return false;
+			}
+			rs.close();
+			stm.close();
+			return true;
+		}catch(SQLException ex){
+			throw new RuntimeException(ex);
+		}
+	}
+
+
+	@Override
+	public boolean VerificarId_notificacao(Integer id_notificacao) {
+		try{
+			Connection conexao = dataSource.getConnection();
+			Statement stm = conexao.createStatement();
+			String sql = "select * from notificacao where id_notificacao = "+id_notificacao+"";
+			ResultSet rs = stm.executeQuery(sql);
+			while(rs.next()){
+				return false;
+			}
+			rs.close();
+			stm.close();
+			return true;
+		}catch(SQLException ex){
+			throw new RuntimeException(ex);
+		}
+	}
+
+
+	@Override
+	public Notificacao getNotificacao_porid(Integer id_notificacao) {
+		try{
+			Connection conexao = dataSource.getConnection();
+			Statement stm = conexao.createStatement();
+			String sql = "select * from notificacao where id_notificacao = "+id_notificacao+"";
+			ResultSet rs = stm.executeQuery(sql);
+			Notificacao notify = new Notificacao();
+			while(rs.next()){
+				notify.setId_notificacao(rs.getInt("id_notificacao"));
+				notify.setId_usuario(rs.getInt("id_usuario"));
+				notify.setTexto(rs.getString("texto"));
+				notify.setVisualizada(rs.getInt("visualizada"));
+				notify.setData(rs.getDate("data"));
+				notify.setTipo(rs.getString("tipo"));
+			}
+			rs.close();
+			stm.close();
+			return notify;
 		}catch(SQLException ex){
 			throw new RuntimeException(ex);
 		}

@@ -7,10 +7,8 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 	
 	<script src="<c:url value="/resources/css/jquery.js" />"></script>
+	
 	<script type="text/javascript">
-	
-	
-		
 	
 		var quant = 0;
 		
@@ -129,12 +127,81 @@
 			});
 		}
 		
+		function mostrar_notificacoes(){
+			$.ajax({
+				url:'mostrarnotificacoes',
+				type: 'get',
+				dataType: 'json',
+				success: function (data) {
+					texto = '';
+					for (var i = 0; i < data.lista.length; i++) {
+						texto = texto + '<a href="#janela1" onclick="abrir_notificacao('+data.lista[i].id_notificacao+')" rel="modal" class="list-group-item">'+data.lista[i].tipo+'</a>';
+					}
+					$(".list-group").empty();
+					$(".list-group").append(texto);
+				},
+				error: function () {
+					console.log('Deu erro');
+				}
+			});
+		}
+		
+		function abrir_notificacao(id_notificacao){
+			alert(id_notificacao);
+			$.ajax({
+				url:'abrirnotificacao',
+				type: 'post',
+				data: {id_notificacao:id_notificacao},
+				dataType: 'json',
+				success: function (data) {
+					texto = data.texto;
+					$(".window").empty();
+					$(".window").append(texto);
+				},
+				error: function () {
+					console.log('Deu erro');
+				}
+			});
+		}
+		
+		$(document).ready(function(){
+		    $(document).on('click', "a[rel=modal]", function(ev){
+		        ev.preventDefault();
+		 
+		        var id = $(this).attr("href");
+		 
+		        var alturaTela = $(document).height();
+		        var larguraTela = $(window).width();
+		     
+		        //colocando o fundo preto
+		        $('#mascara').css({'width':larguraTela,'height':alturaTela});
+		        $('#mascara').fadeIn(1000);
+		        $('#mascara').fadeTo("slow",0.8);
+		 
+		        var left = ($(window).width() /2) - ( $(id).width() / 2 );
+		        var top = ($(window).height() / 2) - ( $(id).height() / 2 );
+		     
+		        $(id).css({'top':top,'left':left});
+		        $(id).show();  
+		    });
+		 
+		    $("#mascara").click( function(){
+		        $(this).hide();
+		        $(".window").hide();
+		    });
+		 
+		    $('.fechar').click(function(ev){
+		        ev.preventDefault();
+		        $("#mascara").hide();
+		        $(".window").hide();
+		    });
+		});
 		
 		$(function(){
 			quant = 0;
 			listar_forcas();
 			mostrar_geral();
-			//$("#lista_usuarios").load('http://localhost:8080/spring/lista_usuarios');
+			mostrar_notificacoes();
 			$("#notificacoes").load('http://localhost:8080/spring/usuario/notificacoes');
 		});
 	</script>
@@ -156,6 +223,15 @@
     			<a href="${url}/editar?id=${sessionScope.usuario.id}">EDITAR PERFIL</a>
 		</nav>
   	</header>
+ 
+<div class="window" id="janela1">
+   
+</div>
+
+<!-- mascara para cobrir o site -->  
+<div id="mascara"></div>
+
+
 
 <input type="text" id="pesquisa">
 <c:url var="url3" value="/criar_forca"/>
@@ -165,12 +241,10 @@
 <a href="${url3}">Criar forca</a>
 <a href="${url4}">Ranking</a>
 
-	<c:if test = "${usuario.tipo_usuario == 1}">
+	<c:if test = "${sessionScope.usuario.tipo_usuario == 1}">
 		<a href="${url2}">Categoria</a>
 	</c:if>
 	
-
-<!-- <div id=notificacoes></div> -->
 <div class = forcas ></div>
 <div class="btn-group">
   <button type="button" onclick = "mostrar_dias(8)" class="btn btn-default">Semana</button>
@@ -179,6 +253,11 @@
 </div>
 <div id=usuarios ></div>
 <div id=lista_usuarios ></div>
+<!-- <div id=notificacoes ></div> -->
+
+<div class="list-group">
+
+</div>
 
 	
 	<footer class="nav navbar-inverse navbar-fixed-bottom">

@@ -27,12 +27,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import dominio.AlgoritmoDerpofoldao;
 import dominio.ComparadorRanking;
+import dominio.EnviarNotificacoes;
 import dominio.EnviarPesquisa;
 import dominio.EnviarRanking;
 import dominio.Forca;
 import dominio.ForcaService;
 import dominio.InformacoesJogo;
 import dominio.IniciarJogo;
+import dominio.Notificacao;
 import dominio.Usuario;
 import dominio.UsuarioPontos;
 import dominio.UsuariosService;
@@ -105,6 +107,21 @@ public class UsuarioController {
 		}
 		
 		return new EnviarRanking(usuarios_nomes,pontos);
+	}
+	
+	@RequestMapping(value="usuario/abrirnotificacao")
+	public @ResponseBody Notificacao AbrirNotificacao (Integer id_notificacao, Model model, HttpServletResponse response) throws IOException{
+
+		return service_forca.getNotificacao_porid(id_notificacao);	
+	}
+	
+	@RequestMapping(value="usuario/mostrarnotificacoes")
+	public @ResponseBody EnviarNotificacoes MostrarNotificacoes (Model model, HttpServletResponse response, HttpSession session) throws IOException{
+
+		
+		Usuario usuario_logado = (Usuario)session.getAttribute("usuario");		
+		
+		return new EnviarNotificacoes(service_forca.getNotificacoes(usuario_logado.getid()));
 	}
 	
 	@RequestMapping(value="ranking_data")
@@ -244,25 +261,10 @@ public class UsuarioController {
 						return "index";
 					}
 				}
+						
+				usuario.setid(usuario.gerar_id_usuario());
 				
-				int id_usuario = derpofoldao.gerarNumero();
-				int i = usuarios.size() - 1;
-				if(usuarios.size() != 0){
-					while(i>=0){
-						if(id_usuario != usuarios.get(i).getid()){
-							usuario.setid(id_usuario);
-							i--;
-						} else if (id_usuario == usuarios.get(i).getid()){
-							id_usuario = derpofoldao.gerarNumero();
-							i = usuarios.size() - 1;
-						}
-					}	
-				}else{
-					usuario.setid(id_usuario);
-				}
-				
-				service.inserir(usuario,1);
-				model.addAttribute("mensagem", "Usuario cadastrado com sucesso.");
+				service.inserir(usuario,0);
 				return "forward:/usuario/logar";
 			}
 			else{
