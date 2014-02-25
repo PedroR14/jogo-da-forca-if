@@ -148,9 +148,22 @@ public class Usuario {
 		forca_criada.setId_usuario(usuario.getid());
 		service_forca.Desafiar(desafio);
 		service_forca.CriarForca(forca_criada);
-		service_forca.Notificar(desafio.getId_usuario_destinatario(), "Você foi desafiado pelo usuario "+
-		usuario.getlogin());
+		service_forca.Notificar(desafio.getId_usuario_destinatario(), "Você foi desafiado pelo usuario<br> "+
+		"<a href=/spring/perfil_usuario?idusuario="+usuario.getid()+">"+usuario.getlogin()+"</a><br> "+
+		"<a href='/spring/jogar?idforca="+forca_criada.getId_forca()+"'>Responder</a>","Desafio");
 		
 	}
 	
+	public Integer gerar_id_usuario(){
+		
+		AlgoritmoDerpofoldao derpofoldao = new AlgoritmoDerpofoldao();
+		
+		int id_usuario = derpofoldao.gerarNumero();
+		
+		while(!service.VerificarId(id_usuario)){
+			id_usuario = derpofoldao.gerarNumero();
+		}
+		
+		return id_usuario;
+	}
 }

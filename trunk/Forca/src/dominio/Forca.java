@@ -147,26 +147,27 @@ public class Forca {
 	public Integer gerar_id_forca(){
 		
 		AlgoritmoDerpofoldao derpofoldao = new AlgoritmoDerpofoldao();
-		List<Forca> forcas = service.getTodasForca_semexcessao();
 		
 		int id_forca = derpofoldao.gerarNumero();
-		int retorno = id_forca;
-		int i = forcas.size() - 1;
-		if(forcas.size() != 0){
-			while(i>=0){
-				if(id_forca != forcas.get(i).getId_forca()){
-					retorno = id_forca;
-					i--;
-				} else if (id_forca == forcas.get(i).getId_forca()){
-					id_forca = derpofoldao.gerarNumero();
-					i = forcas.size() - 1;
-				}
-			}	
-		}else{
-			return id_forca;
+		
+		while(!service.VerificarId(id_forca)){
+			id_forca = derpofoldao.gerarNumero();
 		}
 		
-		return retorno;
+		return id_forca;
+	}
+	
+	public Integer gerar_id_notificacao(){
+		
+		AlgoritmoDerpofoldao derpofoldao = new AlgoritmoDerpofoldao();
+		
+		int id_forca = derpofoldao.gerarNumero();
+		
+		while(!service.VerificarId(id_forca)){
+			id_forca = derpofoldao.gerarNumero();
+		}
+		
+		return id_forca;
 	}
 
 }

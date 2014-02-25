@@ -48,4 +48,8 @@ public class UsuariosService {
 		return repositorio.getPor_Login(login);
 	}
 	
+	public boolean VerificarId(Integer id_usuario){
+		return repositorio.VerificarId(id_usuario);
+	}
+	
 }

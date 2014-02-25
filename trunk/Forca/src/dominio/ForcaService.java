@@ -57,12 +57,17 @@ public class ForcaService {
 		forca_repositorio.Desafiar(desafio);
 	}
 	
-	public void Notificar(int id_usuario, String texto){
-		forca_repositorio.Notificar(id_usuario, texto);
+	public void Notificar(int id_usuario, String texto, String tipo){
+		forca_repositorio.Notificar(id_usuario, texto,tipo);
 	}
 	
-	public List<String> getNotificacoes(Integer id_usuario){
+	public List<Notificacao> getNotificacoes(Integer id_usuario){
 		return forca_repositorio.getNotificacoes(id_usuario);
+		
+	}
+	
+	public Notificacao getNotificacao_porid(Integer id_notificacao){
+		return forca_repositorio.getNotificacao_porid(id_notificacao);
 		
 	}
 	
@@ -76,6 +81,26 @@ public class ForcaService {
 	
 	public int getpontos(int id_usuario){
 		return forca_repositorio.getpontos(id_usuario);
+	}
+	
+	public boolean isDesafio(Integer id_forca){
+		return forca_repositorio.isDesafio(id_forca);
+	}
+	
+	public Integer getApostaDesafio(Integer id_forca){
+		return forca_repositorio.getApostaDesafio(id_forca);
+	}
+	
+	public Integer getDestinatarioDesafio(Integer id_forca){
+		return forca_repositorio.getDestinatarioDesafio(id_forca);
+	}
+	
+	public boolean VerificarId(Integer id_forca){
+		return forca_repositorio.VerificarId(id_forca);
+	}
+	
+	public boolean VerificarId_notificacao(Integer id_notificacao){
+		return forca_repositorio.VerificarId_notificacao(id_notificacao);
 	}
 
 }

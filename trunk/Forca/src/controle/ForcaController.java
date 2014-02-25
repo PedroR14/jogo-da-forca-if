@@ -1,7 +1,6 @@
 package controle;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
@@ -19,12 +18,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import dominio.AlgoritmoDerpofoldao;
 import dominio.Categoria;
-import dominio.Desafio;
+import dominio.EnviarResposta;
 import dominio.Forca;
 import dominio.ForcaService;
 import dominio.InformacoesJogo;
-import dominio.IniciarJogo;
-import dominio.EnviarResposta;
 import dominio.ListaForcas;
 import dominio.Usuario;
 import dominio.UsuariosService;
@@ -48,6 +45,7 @@ public class ForcaController {
 	
 	private int acertos;
 	private int erros;
+	private int aposta = 0;
 	private boolean acabou = false;
 
 	
@@ -70,10 +68,27 @@ public class ForcaController {
 	}
 	
 	@RequestMapping(value="jogar", method=RequestMethod.GET)
-	public String jogar(@RequestParam("idforca") Integer idforca,Model model){
+	public String jogar(@RequestParam("idforca") Integer idforca,Model model,HttpSession session){
+		
+		Usuario usuario = (Usuario) session.getAttribute("usuario");
+		
+		if(usuario.getid() == service.getPorid_forca(idforca).getId_usuario()){
+			return "redirect:/usuario/main";
+		}
+		int destinatario = service.getDestinatarioDesafio(idforca);
+		int idusuario = usuario.getid();
+		if(service.isDesafio(idforca)){
+			if(destinatario == idusuario){
+				aposta = service.getApostaDesafio(idforca);
+			}else{
+				return "redirect:/usuario/main";
+			}
+		}
 		
 		palavra_array = forca.gerar_array_letras(idforca);
 		service.excluir(idforca);
+		
+		
 		
 		model.addAttribute("tracos",forca.gerar_tracos(palavra_array.length -1 ));
 		
@@ -83,7 +98,7 @@ public class ForcaController {
 	
 	
 	@RequestMapping(value="usuario/listaforcas")
-	public @ResponseBody ListaForcas notificacoes(@RequestParam("quant") Integer quant,Model model,HttpSession session,HttpServletResponse response) throws IOException{
+	public @ResponseBody ListaForcas listar_forcas(@RequestParam("quant") Integer quant,Model model,HttpSession session,HttpServletResponse response) throws IOException{
 		Usuario usuario = (Usuario)session.getAttribute("usuario");
 		boolean possui_prox = false;
 		
@@ -133,9 +148,14 @@ public class ForcaController {
 	@RequestMapping(value="fimdejogo")
 	public String fimdejogo(Model model,HttpSession session){
 		Usuario usuario = (Usuario)session.getAttribute("usuario");
+		
+		if(aposta == 0){
+			aposta = 10;
+		}
+		
 		if(acertos == (palavra_array.length-1)){
-			model.addAttribute("mensagem", "Você ganhou 10pts");
-			service.ForcaVitoria(usuario.getid(), 10);
+			model.addAttribute("mensagem", "Você ganhou "+aposta+"pts");
+			service.ForcaVitoria(usuario.getid(), aposta);
 			model.addAttribute("pontos", "Sua nova pontuação é "+service.getpontos(usuario.getid()));
 			acertos = 0;
 			erros = 0;
@@ -146,7 +166,7 @@ public class ForcaController {
 			erros = 0;
 		}
 		
-		
+		aposta = 0;
 		return "Fimdejogo";
 	}
 	
@@ -191,7 +211,7 @@ public class ForcaController {
 	}
 	
 	@RequestMapping(value="forcasalvar")
-	public String salvarForca(@Valid Forca forca, BindingResult result, 
+	public String salvarForca(@Valid Forca forca_criada, BindingResult result, 
 			Model model,HttpSession session){
 		if(result.hasErrors()){
 			return "forward:/criar_forca";
@@ -201,27 +221,13 @@ public class ForcaController {
 		
 		Usuario usuario = (Usuario)session.getAttribute("usuario");
 		
-		List<Forca> forcas = service.getTodasForca_semexcessao();
 		
-		int id_forca = derpofoldao.gerarNumero();
-		int i = forcas.size() - 1;
-		if(forcas.size() != 0){
-			while(i>=0){
-				if(id_forca != forcas.get(i).getId_forca()){
-					forca.setId_forca(id_forca);
-					i--;
-				} else if (id_forca == forcas.get(i).getId_forca()){
-					id_forca = derpofoldao.gerarNumero();
-					i = forcas.size() - 1;
-				}
-			}	
-		}else{
-			forca.setId_forca(id_forca);
-		}
+		forca_criada.setId_forca(forca.gerar_id_forca());
 		
-		forca.setId_usuario(usuario.getid());
-		forca.setTem_desafio(0);
-		service.CriarForca(forca);
+		
+		forca_criada.setId_usuario(usuario.getid());
+		forca_criada.setTem_desafio(0);
+		service.CriarForca(forca_criada);
 		
 		return "redirect:/usuario/main";
 	}
@@ -232,7 +238,6 @@ public class ForcaController {
 		model.addAttribute("forca", new Forca());
 		
 		List<Categoria> categorias = service.getTotas_categoria();
-		String usuario_destinatario = null;
 		int aposta = 0;
 		
 		model.addAttribute("aposta", aposta);
@@ -254,7 +259,7 @@ public class ForcaController {
 		
 		usuario.EnviarDesafio(forca, aposta, usuario_remetente, id_destinatario);
 				
-		return "main";
+		return "redirect:/usuario/main";
 	} 
 	
 	

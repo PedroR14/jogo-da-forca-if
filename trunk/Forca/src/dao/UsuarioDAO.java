@@ -232,4 +232,22 @@ public class UsuarioDAO implements UsuarioRepositorio {
 			throw new RuntimeException(ex);
 		}
 	}
+
+	@Override
+	public boolean VerificarId(Integer id_usuario) {
+		try{
+			Connection conexao = dataSource.getConnection();
+			Statement stm = conexao.createStatement();
+			String sql = "select * from usuarios where id = "+id_usuario+"";
+			ResultSet rs = stm.executeQuery(sql);
+			while(rs.next()){
+				return false;
+			}
+			rs.close();
+			stm.close();
+			return true;
+		}catch(SQLException ex){
+			throw new RuntimeException(ex);
+		}
+	}
 }
