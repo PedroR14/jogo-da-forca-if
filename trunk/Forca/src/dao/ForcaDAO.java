@@ -308,7 +308,7 @@ public class ForcaDAO implements ForcaRepositorio{
 			stm.setInt(2, id_usuario);
 			stm.executeUpdate();
 			stm.close();
-			salvar_historico(id_usuario, pontos, 1);
+			salvar_historico(id_usuario, pontos, 0);
 		}catch(SQLException ex){
 			throw new RuntimeException(ex);
 		}
@@ -322,7 +322,6 @@ public class ForcaDAO implements ForcaRepositorio{
 			Statement stm = conexao.createStatement();
 			String sql = "select pontos from pontuacao where id_usuario = "+id_usuario+"";
 			ResultSet rs = stm.executeQuery(sql);
-			ArrayList<Categoria> categorias = new ArrayList<>();
 			int pontos = 0;
 			while(rs.next()){
 				pontos = rs.getInt(1);
@@ -499,6 +498,52 @@ public class ForcaDAO implements ForcaRepositorio{
 		}catch(SQLException ex){
 			throw new RuntimeException(ex);
 		}
+	}
+
+
+	@Override
+	public void MarcarLida_Notificao(Integer id_notificacao) {
+		try{
+			Connection conexao = dataSource.getConnection();
+			String sql = "update notificacao set visualizada = ? where id_notificacao = ?";
+			PreparedStatement stm = conexao.prepareStatement(sql);
+			stm.setInt(1, 1);
+			stm.setInt(2, id_notificacao);
+			stm.executeUpdate();
+			stm.close();
+		}catch(SQLException ex){
+			throw new RuntimeException(ex);
+		}
+	}
+
+
+	@Override
+	public void excluirdesafio(Integer id_forca) {
+		try{
+			Connection conexao = dataSource.getConnection();
+			String sql = " delete from desafio where id_forca = "+id_forca+"";
+			PreparedStatement stm = conexao.prepareStatement(sql);
+			stm.executeUpdate();
+			stm.close();
+		}catch(SQLException ex){
+			throw new RuntimeException(ex);
+		}
+		
+	}
+
+
+	@Override
+	public void excluirnotificacao(Integer id_notificacao) {
+		try{
+			Connection conexao = dataSource.getConnection();
+			String sql = " delete from notificacao where id_notificacao = "+id_notificacao+"";
+			PreparedStatement stm = conexao.prepareStatement(sql);
+			stm.executeUpdate();
+			stm.close();
+		}catch(SQLException ex){
+			throw new RuntimeException(ex);
+		}
+		
 	}
 
 }

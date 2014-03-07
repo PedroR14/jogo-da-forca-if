@@ -16,6 +16,52 @@
 			$('#palavra').filter_input({regex:'[a-zA-Z-çÇÊêÈèÉéÛûÙùÌìÍíÎîÔôÒòÓóÕõÂâÀàÁáÃãÌìÍíÎî ]'});
 			$('#dica').filter_input({regex:'[a-zA-Z0-9-çÇÊêÈèÉéÛûÙùÌìÍíÎîÔôÒòÓóÕõÂâÀàÁáÃãÌìÍíÎî ]'});
 		});
+		
+		function salvar(){
+			
+			var palavra = $("#palavra").val();
+			var dica = $("#dica").val();
+			var cod_categoria = $("#cod_categoria").val();
+			
+			 $.ajax({
+					url:'forcasalvar',
+					type: 'post',
+					dataType: 'json',
+					data: {palavra:palavra, dica:dica, cod_categoria:cod_categoria},
+					success: function (data) {
+						if(data == true){
+							alert('forca salva');
+							 $("#dica").val('');
+							$("#palavra").val('');
+						}
+						if(data == false){
+							if($("#dica").val() == ''){
+								$("#dicaerro").append("Campo Obrigatório");
+							}else{
+								$("#dicaerro").append("Minimo 5 Caracteres");
+							}
+							if($("#palavra").val() == ''){
+								$("#palavraerro").append("Campo Obrigatório");
+							}else{
+								$("#palavraerro").append("Minimo 2 Caracteres");
+							}
+							alert('forca não');
+						}
+					},
+					error: function () {
+						console.log('Deu erro');
+					}
+				});
+		}
+		
+		$( "#dica" ).focusin(function() {
+			$("#dicaerro").empty();
+		});
+		$( "#palavra" ).focusin(function() {
+			$("#palavraerro").empty();
+		});
+
+		
 	</script>
 	<title>Criar Forca</title>
 </head>
@@ -24,14 +70,14 @@
 <h2>Criar Forca</h2>
 
 	<c:url var="actionUrl" value="forcasalvar" />
-	<form action="${actionUrl}" method="post">
+	<form method="post">
 	
 
 	Dica: <input type="text" id="dica" name="dica" value="${forca.dica}"/> <br>
-			<form:errors path="forca.dica" cssStyle="color:red"/>
+			<div id="dicaerro"></div>
 	Palavra: <input type="text" id="palavra" name="palavra" value="${forca.palavra}"/> <br>
-			<form:errors path="forca.palavra" cssStyle="color:red"/>
-	<select name = "cod_categoria" value = "${forca.cod_categoria }"> 
+			<div id="palavraerro"></div>
+	<select  id="cod_categoria" name = "cod_categoria" value = "${forca.cod_categoria }"> 
 	<c:forEach var="categoria" items="${categorias}">
 	<option value="${categoria.idcategoria}">
 	${categoria.tipocategoria}
@@ -39,7 +85,7 @@
 	</c:forEach> 
 	</select>
 	
-	<input type="submit" value="Criar">
+	<input type="button" onclick="salvar()" value="Criar">
 	
 	</form>
 	 

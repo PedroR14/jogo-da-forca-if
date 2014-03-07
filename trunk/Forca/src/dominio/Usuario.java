@@ -110,7 +110,6 @@ public class Usuario {
 		
 		for (int i = 0; i < usuarios.size(); i++) {
 			UsuarioPontos usuario = new UsuarioPontos();
-			Integer id = usuarios.get(i).getid();
 			usuario.setPontos(service.getRanking_Data(usuarios.get(i).getid(), inicio, fim));
 			usuario.setId_usuario(usuarios.get(i).getid());
 			usuario_pontos.add(usuario);
@@ -124,7 +123,6 @@ public class Usuario {
 		
 		for (int i = 0; i < usuarios.size(); i++) {
 			UsuarioPontos usuario = new UsuarioPontos();
-			Integer id = usuarios.get(i).getid();
 			usuario.setPontos(service.getRanking_Dias(usuarios.get(i).getid(), dias));
 			usuario.setId_usuario(usuarios.get(i).getid());
 			usuario_pontos.add(usuario);

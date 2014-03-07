@@ -1,6 +1,5 @@
 package dominio;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public interface ForcaRepositorio {
@@ -15,9 +14,12 @@ public interface ForcaRepositorio {
 	Categoria getPor_id_categoria(Integer id_categoria);
 	void CriarCategoria(Categoria categoria);
 	void Desafiar(Desafio desafio);
+	void excluirdesafio(Integer id_forca);
 	void Notificar(int id_usuario, String texto, String tipo);
+	void excluirnotificacao(Integer id_notificacao);
 	List<Notificacao> getNotificacoes(Integer id_usuario);
 	Notificacao getNotificacao_porid(Integer id_notificacao);
+	void MarcarLida_Notificao(Integer id_notificacao);
 	void ForcaVitoria(int id_usuario, int pontos);
 	void ForcaDerrota(int id_usuario, int pontos);
 	int getpontos(int id_usuario);

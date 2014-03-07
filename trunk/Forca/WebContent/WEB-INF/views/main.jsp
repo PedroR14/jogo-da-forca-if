@@ -9,8 +9,6 @@
 	<script src="<c:url value="/resources/css/jquery.js" />"></script>
 	
 	<script type="text/javascript">
-	
-		var quant = 0;
 		
 		function ranking_dias(dias){
 			
@@ -27,55 +25,6 @@
 				}
 			});
 			 
-		}
-		
-		
-		function listar_forcas(){
-		
-			var forcas = [];
-		
-			$.ajax({
-				url:'listaforcas',
-				type: 'get',
-				dataType: 'json',
-				data: {quant:quant},
-				success: function (data) {
-					forcas = data.forcas;
-					var texto = '';
-					for(var i=0; i < forcas.length; i++){
-						texto = texto +  data.forcas[i].dica +'<br>'+'<a href="/spring/jogar?idforca='+data.forcas[i].id_forca+'">Responder</a>'+'<br><hr>';
-					}
-				
-			    		texto = texto + '<div class = botoes>';
-			    		texto = texto + '<ul class="pager">';
-			    		if(quant != 0){
-			    			texto = texto + '<li class="previous" onclick = "voltar_pagina()" ><a>&larr; Anterior</a></li> ';
-			    		}
-			    		if(forcas.length == 5 && data.possui_prox == true){
-			    			texto = texto + '<li class="next" onclick = "passar_pagina()" ><a>Proxima &rarr; </a></li> ';
-			    		}
-			    		texto = texto + '</ul>';
-			    		texto = texto + '</div>';
-						$(".forcas").append(texto);
-				},
-				error: function () {
-					console.log('Deu erro');
-				}
-			});
-		
-		}
-		
-	
-		function passar_pagina(){
-			$(".forcas").empty();
-			quant = quant + 5;
-			listar_forcas();
-		}
-	
-		function voltar_pagina(){
-			$(".forcas").empty();
-			quant = quant - 5;
-			listar_forcas();
 		}
 		
 		function mostrar_dias(dias){
@@ -96,8 +45,8 @@
 						}
 					}
 					texto = texto + '<button type="submit" class="btn btn-primary" value="MaisRanking">Ver Mais Ranking</button>';
-					$("#usuarios").empty();
-					$("#usuarios").append(texto);
+					$(".list-rank").empty();
+					$(".list-rank").append(texto);
 				},
 				error: function () {
 					console.log('Deu erro');
@@ -118,8 +67,8 @@
 						}
 					}
 					texto = texto + '<button type="submit" class="btn btn-primary" value="MaisRanking">Ver Mais Ranking</button>';
-					$("#usuarios").empty();
-					$("#usuarios").append(texto);
+					$(".list-rank").empty();
+					$(".list-rank").append(texto);
 				},
 				error: function () {
 					console.log('Deu erro');
@@ -127,144 +76,97 @@
 			});
 		}
 		
-		function mostrar_notificacoes(){
-			$.ajax({
-				url:'mostrarnotificacoes',
-				type: 'get',
-				dataType: 'json',
-				success: function (data) {
-					texto = '';
-					for (var i = 0; i < data.lista.length; i++) {
-						texto = texto + '<a href="#janela1" onclick="abrir_notificacao('+data.lista[i].id_notificacao+')" rel="modal" class="list-group-item">'+data.lista[i].tipo+'</a>';
-					}
-					$(".list-group").empty();
-					$(".list-group").append(texto);
-				},
-				error: function () {
-					console.log('Deu erro');
-				}
-			});
+		function exibir_notificacoes(){
+			$(".forcas").empty();
+			$(".filtro").hide();
+			$(".forcas").load('http://localhost:8080/spring/usuario/notificacoes');
+			$("#menu_notificacoes").addClass("active");
+			$("#menu_forcas").removeClass("active");
+			$("#menu_criar").removeClass("active");
+			
 		}
 		
-		function abrir_notificacao(id_notificacao){
-			alert(id_notificacao);
-			$.ajax({
-				url:'abrirnotificacao',
-				type: 'post',
-				data: {id_notificacao:id_notificacao},
-				dataType: 'json',
-				success: function (data) {
-					texto = data.texto;
-					$(".window").empty();
-					$(".window").append(texto);
-				},
-				error: function () {
-					console.log('Deu erro');
-				}
-			});
+		function exibir_forcas(){
+			$(".forcas").empty();
+			$(".filtro").show();
+			$(".forcas").load('http://localhost:8080/spring/usuario/forcas');
+			$("#menu_notificacoes").removeClass("active");
+			$("#menu_forcas").addClass("active");
+			$("#menu_criar").removeClass("active");
 		}
 		
-		$(document).ready(function(){
-		    $(document).on('click', "a[rel=modal]", function(ev){
-		        ev.preventDefault();
-		 
-		        var id = $(this).attr("href");
-		 
-		        var alturaTela = $(document).height();
-		        var larguraTela = $(window).width();
-		     
-		        //colocando o fundo preto
-		        $('#mascara').css({'width':larguraTela,'height':alturaTela});
-		        $('#mascara').fadeIn(1000);
-		        $('#mascara').fadeTo("slow",0.8);
-		 
-		        var left = ($(window).width() /2) - ( $(id).width() / 2 );
-		        var top = ($(window).height() / 2) - ( $(id).height() / 2 );
-		     
-		        $(id).css({'top':top,'left':left});
-		        $(id).show();  
-		    });
-		 
-		    $("#mascara").click( function(){
-		        $(this).hide();
-		        $(".window").hide();
-		    });
-		 
-		    $('.fechar').click(function(ev){
-		        ev.preventDefault();
-		        $("#mascara").hide();
-		        $(".window").hide();
-		    });
-		});
+		function exibir_criar(){
+			$(".forcas").empty();
+			$(".filtro").hide();
+			$(".forcas").load('http://localhost:8080/spring/criar_forca');
+			$("#menu_notificacoes").removeClass("active");
+			$("#menu_forcas").removeClass("active");
+			$("#menu_criar").addClass("active");
+		}
 		
 		$(function(){
-			quant = 0;
-			listar_forcas();
+			$(".forcas").load('http://localhost:8080/spring/usuario/forcas');
 			mostrar_geral();
-			mostrar_notificacoes();
-			$("#notificacoes").load('http://localhost:8080/spring/usuario/notificacoes');
 		});
 	</script>
 	<link rel="stylesheet" type="text/css" href="<c:url value="/resources/css/bootstrap.css" />" />
 	<link rel="stylesheet" type="text/css" href="<c:url value="/resources/css/main.css" />" />
+	<link rel="stylesheet" type="text/css" href="<c:url value="/resources/css/modal.css" />" />
 	<title>Principal</title>
 </head>
 <body>
-	<c:url var="url" value="/usuario"/>
-	<div id=imagem>
-		<img src="#" alt="#" class="img-thumbnail">
-	</div>
-	<header>
-		<nav class="navbar navbar-inverse" role="navigation">
-			<div class="navbar-header">
-    			<h1> Jogo da Forca </h1>
-    		</div>
-    			<h4 class="navbar-brand">Olá,${sessionScope.usuario.nome}, você possui ${pontos} pts<h4>
-    			<a href="${url}/editar?id=${sessionScope.usuario.id}">EDITAR PERFIL</a>
-		</nav>
-  	</header>
+	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div class="navbar-header">
+    		<a href="#" class="navbar-brand"><h2>Jogo da Forca</h2></a>
+    	</div>
+    	<h4 class="navbar-brand navbar-right">Olá,${sessionScope.usuario.nome}, você possui ${pontos} pts<br>
+    	<a href="/spring/usuario/sair">SAIR</a>
+    	<a class="navbar-right" href="/spring/editar?id=${sessionScope.usuario.id}">MEU PERFIL</a></h4>
+	</nav>
  
-<div class="window" id="janela1">
-   
+
+
+
+<aside class="busca well">
+	<form role="form">
+		<div class="form-group">
+			Busca Usuarios:
+			<input class="form-control" type="text" id="pesquisa">
+		</div>
+	</form>
+	<div id="lista_usuarios"></div>
+</aside>
+	
+<div class="main well">
+	<ul class="nav nav-tabs">
+  		<li class="active" id="menu_forcas" onclick="exibir_forcas()"><a href="#">Lista Forcas</a></li>
+  		<li id="menu_notificacoes" onclick="exibir_notificacoes()"><a href="#">Notificações</a></li>
+  		<li id="menu_criar" onclick="exibir_criar()"><a href="#">Criar Forca</a></li>
+	</ul>
+	<div class="filtro">
+	<p>Filtro Categoria:</p>
+	<select id = "categoria" class="form-control">
+		<option value="0" >Todas</option>
+  		<c:forEach var="categoria" items="${categorias}">
+		<option value="${categoria.idcategoria}">
+		${categoria.tipocategoria}
+	</option>		
+	</c:forEach>
+	</select>
+	<input type=button onclick="filtrar()" value="Filtrar">
+	</div>
+	<div class="forcas well"></div>
 </div>
 
-<!-- mascara para cobrir o site -->  
-<div id="mascara"></div>
+<aside class="rank well">
+	<div class="btn-group">
+	  <button type="button" onclick="mostrar_dias(8)" class="btn btn-default">Semana</button>
+	  <button type="button" onclick="mostrar_dias(30)" class="btn btn-default">Mês</button>
+	  <button type="button" onclick="mostrar_geral()" class="btn btn-default">Geral</button>
+	</div>
+	<div class="list-rank"></div>
+</aside>
 
-
-
-<input type="text" id="pesquisa">
-<c:url var="url3" value="/criar_forca"/>
-<c:url var="url4" value="/ranking"/>
-<c:url var="url2" value="/inserir_categoria"/>
-
-<a href="${url3}">Criar forca</a>
-<a href="${url4}">Ranking</a>
-
-	<c:if test = "${sessionScope.usuario.tipo_usuario == 1}">
-		<a href="${url2}">Categoria</a>
-	</c:if>
-	
-<div class = forcas ></div>
-<div class="btn-group">
-  <button type="button" onclick = "mostrar_dias(8)" class="btn btn-default">Semana</button>
-  <button type="button" onclick = "mostrar_dias(30)" class="btn btn-default">Mês</button>
-  <button type="button" onclick = "mostrar_geral()" class="btn btn-default">Geral</button>
-</div>
-<div id=usuarios ></div>
-<div id=lista_usuarios ></div>
-<!-- <div id=notificacoes ></div> -->
-
-<div class="list-group">
-
-</div>
-
-	
-	<footer class="nav navbar-inverse navbar-fixed-bottom">
-		<p>Jogo da Forca &copy 2014</p>
-	</footer>
-	
-	 
 	<script>
 		
 		$( "#pesquisa" ).keyup(function() {
@@ -279,7 +181,7 @@
 				success: function (data) {
 					var texto = '';
 						for(var i=0; i < data.usuarios.length; i++){
-							texto = texto +  '<br>'+'<a href="/spring/perfil_usuario?idusuario='+data.usuarios[i].id+'">'+data.usuarios[i].nome+'</a>'+'<br><hr>';
+							texto = texto +  ''+'<a href="/spring/perfil_usuario?idusuario='+data.usuarios[i].id+'">'+data.usuarios[i].nome+'</a>'+'<hr>';
 						}
 						$("#lista_usuarios").empty();
 						$("#lista_usuarios").append(texto);
@@ -291,5 +193,9 @@
 			 
 		});	 
 	</script>
+	
+	<footer class="nav navbar-inverse navbar-fixed-bottom">
+		<p>Jogo da Forca © 2014</p>
+	</footer>
 </body>
 </html>

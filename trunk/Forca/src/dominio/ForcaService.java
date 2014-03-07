@@ -1,6 +1,5 @@
 package dominio;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,8 +56,16 @@ public class ForcaService {
 		forca_repositorio.Desafiar(desafio);
 	}
 	
+	public void excluirdesafio(Integer id_forca){
+		forca_repositorio.excluirdesafio(id_forca);
+	}
+	
 	public void Notificar(int id_usuario, String texto, String tipo){
 		forca_repositorio.Notificar(id_usuario, texto,tipo);
+	}
+	
+	public void excluirnotificacao(Integer id_notificacao){
+		forca_repositorio.excluirnotificacao(id_notificacao);
 	}
 	
 	public List<Notificacao> getNotificacoes(Integer id_usuario){
@@ -69,6 +76,10 @@ public class ForcaService {
 	public Notificacao getNotificacao_porid(Integer id_notificacao){
 		return forca_repositorio.getNotificacao_porid(id_notificacao);
 		
+	}
+	
+	public void MarcarLida_Notificao(Integer id_notificacao){
+		forca_repositorio.MarcarLida_Notificao(id_notificacao);
 	}
 	
 	public void ForcaVitoria(int id_usuario, int pontos){

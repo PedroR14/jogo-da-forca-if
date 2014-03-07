@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,7 @@ public class Forca {
 	private int id_usuario;
 	private int cod_categoria;
 	
-	@NotNull @Size(min=1,message="Campo Obrigatório")
+	@NotNull @Size(min=2,message="Campo Obrigatório")
 	private String palavra;
 	
 	@NotNull @Size(min=5, max=130, message="Dica deve conter de 5 a 130 Caracteres.")

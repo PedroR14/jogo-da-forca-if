@@ -1,7 +1,5 @@
 package dominio;
 
-import java.util.ArrayList;
-
 public class EnviarResposta {
 	private String letra;
 	private int resultado;
