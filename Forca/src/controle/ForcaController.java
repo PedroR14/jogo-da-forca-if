@@ -1,6 +1,7 @@
 package controle;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import dominio.AlgoritmoDerpofoldao;
 import dominio.Categoria;
 import dominio.EnviarResposta;
 import dominio.Forca;
@@ -75,11 +75,13 @@ public class ForcaController {
 		if(usuario.getid() == service.getPorid_forca(idforca).getId_usuario()){
 			return "redirect:/usuario/main";
 		}
-		int destinatario = service.getDestinatarioDesafio(idforca);
+		
 		int idusuario = usuario.getid();
 		if(service.isDesafio(idforca)){
+			int destinatario = service.getDestinatarioDesafio(idforca);
 			if(destinatario == idusuario){
 				aposta = service.getApostaDesafio(idforca);
+				service.excluirdesafio(idforca);
 			}else{
 				return "redirect:/usuario/main";
 			}
@@ -98,11 +100,17 @@ public class ForcaController {
 	
 	
 	@RequestMapping(value="usuario/listaforcas")
-	public @ResponseBody ListaForcas listar_forcas(@RequestParam("quant") Integer quant,Model model,HttpSession session,HttpServletResponse response) throws IOException{
+	public @ResponseBody ListaForcas listar_forcas(@RequestParam("quant") Integer quant, Integer categoria, Model model,HttpSession session,HttpServletResponse response) throws IOException{
 		Usuario usuario = (Usuario)session.getAttribute("usuario");
 		boolean possui_prox = false;
 		
-		List<Forca> forcas = service.getPorcategoria_forca(1,usuario.getid());
+		List<Forca> forcas;
+		
+		if(categoria == 0){
+			forcas = service.getTodasForca(usuario.getid());
+		}else{
+			forcas = service.getPorcategoria_forca(categoria,usuario.getid());
+		}
 		
 		List<Forca> forcas_part = forca.get_intervalo_forcas(quant, forcas);
 		
@@ -113,13 +121,13 @@ public class ForcaController {
 		return new ListaForcas(forcas_part, possui_prox);
 	}
 	
-	@RequestMapping(value="responder")
+	@RequestMapping(value="usuario/responder")
 	public @ResponseBody InformacoesJogo responder(Model model, HttpServletResponse response) throws IOException{
 			
 		return new InformacoesJogo(palavra_array.length - 1);
 	}
 	
-	@RequestMapping(value="verificar")
+	@RequestMapping(value="usuario/verificar")
 	public @ResponseBody EnviarResposta verificar(@RequestParam("letra") String letra,Model model, HttpServletResponse response) throws IOException{
 		System.out.println(letra);
 		int resultado = 0;
@@ -146,10 +154,12 @@ public class ForcaController {
 	}
 	
 	@RequestMapping(value="fimdejogo")
-	public String fimdejogo(Model model,HttpSession session){
+	public @ResponseBody List<Integer> fimdejogo(Model model,HttpSession session){
 		Usuario usuario = (Usuario)session.getAttribute("usuario");
-		
+		boolean desafio = true;
+		List<Integer> retorno = new ArrayList<>();
 		if(aposta == 0){
+			desafio = false;
 			aposta = 10;
 		}
 		
@@ -159,15 +169,24 @@ public class ForcaController {
 			model.addAttribute("pontos", "Sua nova pontuação é "+service.getpontos(usuario.getid()));
 			acertos = 0;
 			erros = 0;
+			retorno.add(1);
 		}else{
+			if(desafio == false){
+				service.ForcaDerrota(usuario.getid(), 0);
+			}else{
+				service.ForcaDerrota(usuario.getid(), aposta);
+			}
 			model.addAttribute("mensagem", "Você perdeu cara");
 			model.addAttribute("pontos", "Sua pontuação é "+service.getpontos(usuario.getid()));
 			acertos = 0;
 			erros = 0;
+			retorno.add(0);
 		}
+		retorno.add(aposta);
+		retorno.add(service.getpontos(usuario.getid()));
 		
 		aposta = 0;
-		return "Fimdejogo";
+		return retorno;
 	}
 	
 	@RequestMapping(value="categoria/salvar", method=RequestMethod.POST)
@@ -210,14 +229,22 @@ public class ForcaController {
 		return "criar_forca";
 	}
 	
-	@RequestMapping(value="forcasalvar")
-	public String salvarForca(@Valid Forca forca_criada, BindingResult result, 
+	@RequestMapping(value="usuario/forcasalvar")
+	public @ResponseBody boolean salvarForca(String palavra, String dica, Integer cod_categoria, 
 			Model model,HttpSession session){
-		if(result.hasErrors()){
-			return "forward:/criar_forca";
+		
+		Forca forca_criada = new Forca();
+		boolean val = false;
+		
+		if(palavra.length() < 2 || dica.length() < 5 || cod_categoria == 0){
+			return val;
+		}else{
+			forca_criada.setPalavra(palavra);
+			forca_criada.setDica(dica);
+			forca_criada.setCod_categoria(cod_categoria);
 		}
 		
-		AlgoritmoDerpofoldao derpofoldao = new AlgoritmoDerpofoldao();
+		
 		
 		Usuario usuario = (Usuario)session.getAttribute("usuario");
 		
@@ -228,8 +255,8 @@ public class ForcaController {
 		forca_criada.setId_usuario(usuario.getid());
 		forca_criada.setTem_desafio(0);
 		service.CriarForca(forca_criada);
-		
-		return "redirect:/usuario/main";
+		val = true;
+		return val;
 	}
 	
 	@RequestMapping(value="desafiar")

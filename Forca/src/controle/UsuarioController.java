@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -25,15 +24,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import dominio.AlgoritmoDerpofoldao;
 import dominio.ComparadorRanking;
 import dominio.EnviarNotificacoes;
 import dominio.EnviarPesquisa;
 import dominio.EnviarRanking;
-import dominio.Forca;
 import dominio.ForcaService;
-import dominio.InformacoesJogo;
-import dominio.IniciarJogo;
 import dominio.Notificacao;
 import dominio.Usuario;
 import dominio.UsuarioPontos;
@@ -52,7 +47,11 @@ public class UsuarioController {
 	private Usuario usuario;
 	
 	@RequestMapping(value="login")
-	public String login(Model model){
+	public String login(Model model,HttpSession session){
+		
+		if((Usuario)session.getAttribute("usuario") != null){
+			return "redirect:/usuario/main";
+		}
 	
 		model.addAttribute("usuario", new Usuario());
 		
@@ -70,28 +69,39 @@ public class UsuarioController {
 			for (int i = 0; i < usuarios.size(); i++) {
 				if(usuarios.get(i).getlogin().equals(usuario.getlogin()) &&
 						usuarios.get(i).getSenha().equals(usuario.getSenha())){
-					model.addAttribute("usuario",usuarios.get(i));
 					session.setAttribute("usuario", usuarios.get(i));
 					model.addAttribute("pontos", service_forca.getpontos(usuarios.get(i).getid()));
-					model.addAttribute("notificacoes", service_forca.getNotificacoes(usuario.getid()));
-					return "main";
+					model.addAttribute("categorias", service_forca.getTotas_categoria());
+					return "redirect:/usuario/main";
 				}
 			}
 			model.addAttribute("mensagem","Login ou senha incorretos");
-			return "forward:/login";
+			return "redirect:/login";
 	}
 	
 	@RequestMapping(value="usuario/main")
 	public String Principal(
 			Model model,HttpSession session){
 		if((Usuario)session.getAttribute("usuario") == null){
-			return "login";
+			return "redirect:/login";
 		}
 		Usuario usuario = (Usuario)session.getAttribute("usuario");
 		model.addAttribute("notificacoes", service_forca.getNotificacoes(usuario.getid()));
 		model.addAttribute("pontos", service_forca.getpontos(usuario.getid()));
+		model.addAttribute("categorias", service_forca.getTotas_categoria());
 		model.addAttribute("usuario",usuario);
 		return "main";
+	}
+	
+	@RequestMapping(value="usuario/sair")
+	public String Logout(
+			Model model,HttpSession session){
+		if((Usuario)session.getAttribute("usuario") == null){
+			return "redirect:/login";
+		}
+		session.removeAttribute("usuario");
+		
+		return "redirect:/login";
 	}
 	
 	@RequestMapping(value="usuario/mostraranking")
@@ -111,7 +121,7 @@ public class UsuarioController {
 	
 	@RequestMapping(value="usuario/abrirnotificacao")
 	public @ResponseBody Notificacao AbrirNotificacao (Integer id_notificacao, Model model, HttpServletResponse response) throws IOException{
-
+		service_forca.MarcarLida_Notificao(id_notificacao);
 		return service_forca.getNotificacao_porid(id_notificacao);	
 	}
 	
@@ -127,8 +137,6 @@ public class UsuarioController {
 	@RequestMapping(value="ranking_data")
 	public @ResponseBody EnviarRanking Ranking_data (String fim, String inicio, Model model, HttpServletResponse response,
 			HttpSession session) throws IOException, ParseException{
-		
-		List<Usuario> usuarios = service.getTodos();
 		
 		List<UsuarioPontos> usuario_pontos = usuario.gerar_ranking_data(service.getTodos(), usuario.data_sql(inicio), usuario.data_sql(fim));
 		
@@ -152,8 +160,6 @@ public class UsuarioController {
 	@RequestMapping(value="usuario/ranking_dias")
 	public @ResponseBody EnviarRanking Ranking_dias (Integer dias, Model model, HttpServletResponse response,
 			HttpSession session) throws IOException, ParseException{
-		
-		List<Usuario> usuarios = service.getTodos();
 		
 		List<UsuarioPontos> usuario_pontos = usuario.gerar_ranking_dias(service.getTodos(), dias);
 		
@@ -184,9 +190,27 @@ public class UsuarioController {
 	@RequestMapping(value="usuario/notificacoes")
 	public String notificacoes(
 			Model model,HttpSession session){
+		
+		if((Usuario)session.getAttribute("usuario") == null){
+			return "redirect:/login";
+		}
+		
 		Usuario usuario = (Usuario)session.getAttribute("usuario");
 		model.addAttribute("notificacoes", service_forca.getNotificacoes(usuario.getid()));
 		return "notificacoes";
+	}
+	
+	@RequestMapping(value="usuario/forcas")
+	public String forcas(
+			Model model,HttpSession session){
+		
+		if((Usuario)session.getAttribute("usuario") == null){
+			return "redirect:/login";
+		}
+		
+		model.addAttribute("categorias", service_forca.getTotas_categoria());
+		
+		return "lista_forcas";
 	}
 	
 	@RequestMapping(value="ranking")
@@ -198,7 +222,12 @@ public class UsuarioController {
 	}
 	
 	@RequestMapping(value="usuarios")
-	public String usuarios(Model model){
+	public String usuarios(Model model,HttpSession session){
+		
+		if((Usuario)session.getAttribute("usuario") == null){
+			return "redirect:/login";
+		}
+		
 		List<Usuario> usuarios = service.getTodos();
 		model.addAttribute("usuarios", usuarios);
 		
@@ -210,8 +239,13 @@ public class UsuarioController {
 	
 	@RequestMapping(value="usuario/editar")
 	public String editar(@RequestParam("id") Integer id, 
-			Model model){
+			Model model,HttpSession session){
 		try{
+			
+			if((Usuario)session.getAttribute("usuario") == null){
+				return "redirect:/login";
+			}
+			
 			Usuario usuarioEmEdicao = service.getPorid(id);
 			model.addAttribute("usuario", usuarioEmEdicao);
 			model.addAttribute("titulo", "Edição de Perfil");
@@ -225,9 +259,11 @@ public class UsuarioController {
 	
 	@RequestMapping(value="usuario/excluir")
 	public String excluir(@RequestParam("id") Integer id, 
-			Model model){
-		
+			Model model,HttpSession session){
 		try{
+			if((Usuario)session.getAttribute("usuario") == null){
+				return "redirect:/login";
+			}
 			service.excluir(id);
 			model.addAttribute("mensagem", "Cliente excluído com sucesso.");
 		}catch(Exception ex){
@@ -247,7 +283,6 @@ public class UsuarioController {
 				if(result.hasErrors()){
 					return "index";
 				}
-				AlgoritmoDerpofoldao derpofoldao = new AlgoritmoDerpofoldao();
 				
 				List<Usuario> usuarios = service.getTodos();
 				
@@ -278,13 +313,17 @@ public class UsuarioController {
 		}catch(Exception ex){
 			model.addAttribute("mensagem", "Ocorreu um erro durante a operação.");
 			ex.printStackTrace();
-			return "forward:/usuarios";
+			return "redirect:/login";
 		}
 		
 	}
 	
 	@RequestMapping(value="perfil_usuario", method=RequestMethod.GET)
-	public String PaginaUsuario(@RequestParam("idusuario") Integer idusuario,Model model){
+	public String PaginaUsuario(@RequestParam("idusuario") Integer idusuario,Model model,HttpSession session){
+		
+		if((Usuario)session.getAttribute("usuario") == null){
+			return "redirect:/login";
+		}
 		
 		Usuario pag_usuario = service.getPorid(idusuario);
 		model.addAttribute("perfil", pag_usuario);
@@ -293,7 +332,11 @@ public class UsuarioController {
 	}
 	
 	@RequestMapping(value="lista_usuarios", method=RequestMethod.GET)
-	public String ListarUsuarios(Model model){
+	public String ListarUsuarios(Model model,HttpSession session){
+		
+		if((Usuario)session.getAttribute("usuario") == null){
+			return "redirect:/login";
+		}
 		
 		List<Usuario> usuarios = service.getTodos();
 		model.addAttribute("usuarios", usuarios);

@@ -28,6 +28,23 @@
 			
 		}
 		
+		function fim_de_jogo(){
+			
+			 $.ajax({
+				url:'fimdejogo',
+				type: 'post',
+				dataType: 'json',
+				data: {dias:dias},
+				success: function (data) {
+					connsole.log('executou');
+				},
+				error: function () {
+					console.log('Deu erro');
+				}
+			});
+			 
+		}
+		
 		function gerartracos(quantidade){
 			for (var i = 0; i < quantidade; i++){
 				tracos[i] = traco;
@@ -105,20 +122,73 @@
 
     		$("#teclado").append(t);
 		}
-	
+		
+		 var tempo = 0;
+
+		tempo = 30;
+		 
+		
+		function startCountdown(){
+		 
+		    if((tempo - 1) >= 0){
+		 
+		        var seg = tempo%60;
+				
+		        if(seg <=9){
+		
+		            seg = "0"+seg;
+		
+		        }
+		
+		        TempoImprimivel = seg;
+				
+		        $("#sessao").html(TempoImprimivel);
+		
+		
+		        setTimeout('startCountdown()',1000);
+		
+		        tempo--;
+		
+		    } else {
+		
+		    	var novaURL = 'http://localhost:8080/spring/fimdejogo';
+				$(window.document.location).attr('href',novaURL);
+
+		    }
+		    
+		    
+		}
+		
+		$(window).bind('beforeunload', function(){
+			return '>>>>>>>>Atenção<<<<<<<< \n Se você sair Essa partida será computada como derrota';
+		});
+		
+
 		$(function(){
+			$(".filtro").hide();
+			$("#menu_notificacoes").removeClass("active");
+			$("#menu_forcas").removeClass("active");
+			$("#menu_criar").removeClass("active");
+			$("#menu_notificacoes").addClass("disabled");
+			$("#menu_forcas").addClass("disabled");
+			$("#menu_criar").addClass("disabled");
+			$('#menu_criar').removeAttr('onclick');
+			$('#menu_forcas').removeAttr('onclick');
+			$('#menu_notificacoes').removeAttr('onclick');
 			mostrarTeclado();
 			iniciar();
+			startCountdown();
 		});
+		
+				 
+
 
 	</script>
+	<link rel="stylesheet" type="text/css" href="<c:url value="/resources/css/modal.css" />" />
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Responder</title>
 </head>
 <body>
-Bem vindo ao jogo da forca! Ha hai!
-<input type="text" name="palavra">
-<input type="button" onClick="mostraTraco()">
 <div id="naoApaga"> 
 </div>
 <div id="teclado">
@@ -128,5 +198,6 @@ Bem vindo ao jogo da forca! Ha hai!
 <div id="palavra">
 ${tracos}
 </div>
+<div id="sessao"></div>
 </body>
 </html>
