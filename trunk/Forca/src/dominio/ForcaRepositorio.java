@@ -14,6 +14,7 @@ public interface ForcaRepositorio {
 	Categoria getPor_id_categoria(Integer id_categoria);
 	void CriarCategoria(Categoria categoria);
 	void Desafiar(Desafio desafio);
+	void Reportar(ReportarJogador reportarJogador);
 	void excluirdesafio(Integer id_forca);
 	void Notificar(int id_usuario, String texto, String tipo);
 	void excluirnotificacao(Integer id_notificacao);

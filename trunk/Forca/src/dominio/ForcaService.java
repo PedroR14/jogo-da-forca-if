@@ -56,6 +56,10 @@ public class ForcaService {
 		forca_repositorio.Desafiar(desafio);
 	}
 	
+	public void Reportar(ReportarJogador reportarJogador){
+		forca_repositorio.Reportar(reportarJogador);
+	}
+	
 	public void excluirdesafio(Integer id_forca){
 		forca_repositorio.excluirdesafio(id_forca);
 	}

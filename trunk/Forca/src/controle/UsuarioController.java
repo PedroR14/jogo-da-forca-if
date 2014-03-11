@@ -46,25 +46,23 @@ public class UsuarioController {
 	@Autowired
 	private Usuario usuario;
 	
-	@RequestMapping(value="login")
+	@RequestMapping(value="login") // É chamado quando o usuário acessa http://localhost:8080/spring/http://localhost:8080/spring/login onde "login" é o que aciona o método
 	public String login(Model model,HttpSession session){
 		
 		if((Usuario)session.getAttribute("usuario") != null){
 			return "redirect:/usuario/main";
 		}
-	
 		model.addAttribute("usuario", new Usuario());
-		
 		return "index";
 	}
 		
 	
 	
-	@RequestMapping(value="usuario/logar", method=RequestMethod.POST)
+	@RequestMapping(value="usuario/logar", method=RequestMethod.POST) // o @RequestMapping captura a URL enviada por algum arquivo, como os JSP dentro da pasta views
 	public String logar(@Valid Usuario usuario, BindingResult result,
 			Model model,HttpSession session) throws EmailException{
 
-			List<Usuario> usuarios = service.getTodos();
+			List<Usuario> usuarios = service.getTodos(); // 
 		
 			for (int i = 0; i < usuarios.size(); i++) {
 				if(usuarios.get(i).getlogin().equals(usuario.getlogin()) &&
