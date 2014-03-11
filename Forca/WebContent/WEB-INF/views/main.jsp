@@ -93,6 +93,7 @@
 			$("#menu_notificacoes").removeClass("active");
 			$("#menu_forcas").addClass("active");
 			$("#menu_criar").removeClass("active");
+			$("#menu_reportar").removeClass("active");
 		}
 		
 		function exibir_criar(){
@@ -102,6 +103,18 @@
 			$("#menu_notificacoes").removeClass("active");
 			$("#menu_forcas").removeClass("active");
 			$("#menu_criar").addClass("active");
+			$("#menu_reportar").removeClass("active");
+		}
+		
+		function exibir_reportar(){
+			$(".forcas").empty();
+			$(".filtro").hide();
+			$(".forcas").load('http://localhost:8080/spring/reportar_jogador');
+			$("#menu_notificacoes").removeClass("active");
+			$("#menu_forcas").removeClass("active");
+			$("#menu_criar").removeClass("active");
+			$("#menu_reportar").addClass("active");
+			
 		}
 		
 		$(function(){
@@ -142,6 +155,7 @@
   		<li class="active" id="menu_forcas" onclick="exibir_forcas()"><a href="#">Lista Forcas</a></li>
   		<li id="menu_notificacoes" onclick="exibir_notificacoes()"><a href="#">Notificações</a></li>
   		<li id="menu_criar" onclick="exibir_criar()"><a href="#">Criar Forca</a></li>
+  		<li id="menu_reportar" onclick="exibir_reportar()"><a href="#">Reportar</a></li>
 	</ul>
 	<div class="filtro">
 	<p>Filtro Categoria:</p>

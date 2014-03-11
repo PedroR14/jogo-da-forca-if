@@ -20,16 +20,16 @@ public class UsuarioDAO implements UsuarioRepositorio {
 	@Autowired
 	private DataSource dataSource;
 	
-	public List<Usuario> getTodos() {
+	public List<Usuario> getTodos() { // List<Usuario> é o tipo de retorno, getTodos() é o nome do método. Ele busca todos os usuários. É chamado na hora do login
 		try{
 			Connection conexao = dataSource.getConnection();
 			Statement stm = conexao.createStatement();
 			String sql = "select * from usuarios";
 			ResultSet rs = stm.executeQuery(sql);
-			ArrayList<Usuario> usuarios = new ArrayList<>();
+			ArrayList<Usuario> usuarios = new ArrayList<>(); // Cria um arrayList que só recebe objetos tipo Usuário
 			while(rs.next()){
 				Usuario u = new Usuario();
-				u.setid( rs.getInt("id") );
+				u.setid( rs.getInt("id") ); // "id" é o nome da coluna na tabela usuarios
 				u.setNome(rs.getString("nome"));
 				u.setlogin(rs.getString("login"));
 				u.setemail(rs.getString("email"));
@@ -37,9 +37,9 @@ public class UsuarioDAO implements UsuarioRepositorio {
 				u.setTipo_usuario(rs.getInt("tipo_usuario"));
 				usuarios.add(u);
 			}
-			rs.close();
-			stm.close();
-			return usuarios;
+			rs.close(); // fecha o objeto que contem os resultados
+			stm.close(); // fecha a conexão
+			return usuarios; // É o arrayList que contem todos os objetos Usuário que foram guardados no banco
 		}catch(SQLException ex){
 			throw new RuntimeException(ex);
 		}

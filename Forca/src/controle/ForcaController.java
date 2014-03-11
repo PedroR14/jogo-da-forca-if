@@ -23,6 +23,7 @@ import dominio.Forca;
 import dominio.ForcaService;
 import dominio.InformacoesJogo;
 import dominio.ListaForcas;
+import dominio.ReportarJogador;
 import dominio.Usuario;
 import dominio.UsuariosService;
 
@@ -258,6 +259,29 @@ public class ForcaController {
 		val = true;
 		return val;
 	}
+	
+//	INICIO DE REPORTAR
+	@RequestMapping(value="reportar_jogador")
+	public String criarReportar(Model model){
+		return "reportar_jogador";
+	}
+	
+	@RequestMapping(value="usuario/reportarsalvar")
+	public @ResponseBody boolean salvarReportar(int idJogador, int idForca, String observacao, 
+			Model model,HttpSession session){
+		
+		ReportarJogador reportarJogador = new ReportarJogador(idJogador,idForca,observacao);
+		
+		boolean val = false;
+		
+		service.Reportar(reportarJogador);
+		
+		val = true;
+		return val;
+	}
+	
+//FIM REPORTAR	
+	
 	
 	@RequestMapping(value="desafiar")
 	public String desafio(@RequestParam("id_destin") Integer id_destin,Model model){

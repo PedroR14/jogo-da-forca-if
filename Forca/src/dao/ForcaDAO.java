@@ -18,6 +18,7 @@ import dominio.Desafio;
 import dominio.Forca;
 import dominio.ForcaRepositorio;
 import dominio.Notificacao;
+import dominio.ReportarJogador;
 
 public class ForcaDAO implements ForcaRepositorio{
 	
@@ -47,6 +48,22 @@ public class ForcaDAO implements ForcaRepositorio{
 		
 	}
 
+	public void Reportar(ReportarJogador reportarJogador){
+		try{
+			Connection conexao = dataSource.getConnection();
+			String sql = "insert into reportar (id_forca, id_usuario, observacao_reportar) "
+					+ "values (?,?,?)";
+			PreparedStatement stm = conexao.prepareStatement(sql);
+			stm.setString(1, Integer.toString(reportarJogador.getId_forca()));
+			stm.setString(2, Integer.toString(reportarJogador.getId_usuario()));
+			stm.setString(3, reportarJogador.getObservacao_reportar());
+			stm.executeUpdate();
+			stm.close();
+		}catch(SQLException ex){
+			throw new RuntimeException(ex);
+		}
+		
+	}
 	
 	public void excluirForca(Integer id_forca) {
 		
