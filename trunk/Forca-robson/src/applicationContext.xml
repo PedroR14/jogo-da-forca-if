@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xmlns:context="http://www.springframework.org/schema/context" 
+       xmlns:mvc="http://www.springframework.org/schema/mvc" 
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+       http://www.springframework.org/schema/beans/spring-beans-3.2.xsd 
+       http://www.springframework.org/schema/context  
+       http://www.springframework.org/schema/context/spring-context-3.2.xsd 
+       http://www.springframework.org/schema/mvc 
+       http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd">
+ 
+    <!-- Diz ao Spring em que pacotes buscar por classes anotadas -->
+    <context:component-scan base-package="controle dominio dao" />
+ 
+    <!-- Configura o Spring MVC para considerar as anotações @Controller -->
+    <mvc:annotation-driven />
+    
+ 	<!-- Configura localização e padrão de nomes das páginas web -->
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/views/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+	
+	<mvc:resources mapping="/resources/**" location="/resources/" />
+	<mvc:annotation-driven />
+	
+	<!-- Configura o Spring Core para considerar as anotações de DI -->
+    <context:annotation-config />
+    
+    <bean id="jsonConverter" class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter" ></bean>
+    
+    <bean id="dataSource" 
+    	class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+    	<property name="username" value="root"/>
+    	<property name="password" value="senha"/>
+    	<property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+    	<property name="url" value="jdbc:mysql://localhost:3306/Forca"/>
+    </bean>
+    
+    <bean id="UsuarioRepositorio" 
+    	class="dao.UsuarioDAO"/>
+    
+    <bean id="ForcaRepositorio" 
+    	class="dao.ForcaDAO"/>
+</beans>
