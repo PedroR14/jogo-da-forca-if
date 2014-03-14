@@ -9,7 +9,8 @@
 
 		var traco = " __ ";
 		var tracos = [" "];
-		
+		var fim = false;
+		           
 		function iniciar(){
 			var letra = 'a';
 			
@@ -34,12 +35,22 @@
 				url:'fimdejogo',
 				type: 'post',
 				dataType: 'json',
-				data: {dias:dias},
 				success: function (data) {
-					connsole.log('executou');
+					texto = '';
+					listar_forcas(0);
+			        $(".window").empty();
+			        if(data[0] == 1){
+			        	texto = texto + '<h2>Vitória</h2><br> <p> você ganhou '+ data[1]+' pts<br>Sua nova Pontuação é '+data[2] +'</p>';
+			        	texto = texto + '<button type="button"onclick="fechar_modal()" class="btn btn-default">Fechar</button>';
+			        }
+			        if(data[0] == 0){
+			        	texto = texto + '<h2>Derrota</h2><br> <p> você perdeu <br>Sua Pontuação é '+data[2] +'</p>';
+			        	texto = texto + '<button type="button"onclick="fechar_modal()" class="btn btn-default">Fechar</button>';
+			        }
+			        $(".window").append(texto);
 				},
 				error: function () {
-					console.log('Deu erro');
+					console.log('Deu erro no fim');
 				}
 			});
 			 
@@ -84,8 +95,8 @@
 						
 					}
 					if(data.acabou == true){
-						var novaURL = 'http://localhost:8080/spring/fimdejogo';
-						$(window.document.location).attr('href',novaURL);
+						fim_de_jogo();
+						fim = true;
 					}
 				},
 				error: function () {
@@ -98,6 +109,11 @@
 			$("#letra").append(letra);
 			
 			
+		}
+		
+		function fechar_modal(){
+			 $("#mascara").hide();
+		     $(".window").hide();
 		}
 	
 
@@ -144,24 +160,29 @@
 				
 		        $("#sessao").html(TempoImprimivel);
 		
-		
+				if(fim == false){
 		        setTimeout('startCountdown()',1000);
-		
+				}
 		        tempo--;
 		
 		    } else {
-		
-		    	var novaURL = 'http://localhost:8080/spring/fimdejogo';
-				$(window.document.location).attr('href',novaURL);
-
+		    	fim_de_jogo();
 		    }
 		    
 		    
 		}
 		
-		$(window).bind('beforeunload', function(){
-			return '>>>>>>>>Atenção<<<<<<<< \n Se você sair Essa partida será computada como derrota';
-		});
+		if(fim == false){
+			
+			$(window).bind('beforeunload', function(){
+				return '>>>>>>>>Atenção<<<<<<<< \n Se você sair Essa partida será computada como derrota';
+			});
+		
+			$(window).unload(function(){
+				fim_de_jogo();
+			});
+			
+		}
 		
 
 		$(function(){
@@ -169,12 +190,6 @@
 			$("#menu_notificacoes").removeClass("active");
 			$("#menu_forcas").removeClass("active");
 			$("#menu_criar").removeClass("active");
-			$("#menu_notificacoes").addClass("disabled");
-			$("#menu_forcas").addClass("disabled");
-			$("#menu_criar").addClass("disabled");
-			$('#menu_criar').removeAttr('onclick');
-			$('#menu_forcas').removeAttr('onclick');
-			$('#menu_notificacoes').removeAttr('onclick');
 			mostrarTeclado();
 			iniciar();
 			startCountdown();

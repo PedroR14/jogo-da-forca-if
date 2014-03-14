@@ -63,6 +63,9 @@
 
 		
 	</script>
+	
+	<link rel="stylesheet" type="text/css" href="<c:url value="/resources/css/main.css" />" />
+	
 	<title>Criar Forca</title>
 </head>
 <body>
@@ -71,13 +74,12 @@
 
 	<c:url var="actionUrl" value="forcasalvar" />
 	<form method="post">
-	
 
-	Dica: <input type="text" id="dica" name="dica" value="${forca.dica}"/> <br>
-			<div id="dicaerro"></div>
-	Palavra: <input type="text" id="palavra" name="palavra" value="${forca.palavra}"/> <br>
-			<div id="palavraerro"></div>
-	<select  id="cod_categoria" name = "cod_categoria" value = "${forca.cod_categoria }"> 
+	Dica: <textarea id="dica" name="dica" style="width: 150px; max-width: 150px; height: 126px; max-height: 126px; text-align: left;"></textarea> <br>
+			<div id="dicaerro" style="text-color: red;"></div>
+	Palavra: <input type="text" id="palavra" name="palavra" style="width: 150px; max-width: 150px; margin-top:20px; text-align:left;"/> <br>
+			<div id="palavraerro" style="text-color: red;"></div>
+	Categoria: <select  id="cod_categoria" name = "cod_categoria"  style="margin-top:20px;"> 
 	<c:forEach var="categoria" items="${categorias}">
 	<option value="${categoria.idcategoria}">
 	${categoria.tipocategoria}

@@ -66,7 +66,7 @@
 							texto = texto +  data.usuarios[i] +'  ' + data.pontos[i]+'<br><hr>';
 						}
 					}
-					texto = texto + '<button type="submit" class="btn btn-primary" value="MaisRanking">Ver Mais Ranking</button>';
+					texto = texto + '<button type="submit" class="btn btn-primary" onclick="exibir_mais_ranking()" value="MaisRanking">Ver Mais Ranking</button>';
 					$(".list-rank").empty();
 					$(".list-rank").append(texto);
 				},
@@ -104,6 +104,24 @@
 			$("#menu_forcas").removeClass("active");
 			$("#menu_criar").addClass("active");
 			$("#menu_reportar").removeClass("active");
+		}
+		
+		function exibir_usuario(id_usuario){
+			$(".forcas").empty();
+			$(".filtro").hide();
+			$(".forcas").load('http://localhost:8080/spring/perfil_usuario?idusuario='+id_usuario);
+			$("#menu_notificacoes").removeClass("active");
+			$("#menu_forcas").removeClass("active");
+			$("#menu_criar").removeClass("active");
+		}
+		
+		function exibir_mais_ranking(){
+			$(".forcas").empty();
+			$(".filtro").hide();
+			$(".forcas").load('http://localhost:8080/spring/ranking');
+			$("#menu_notificacoes").removeClass("active");
+			$("#menu_forcas").removeClass("active");
+			$("#menu_criar").removeClass("active");
 		}
 		
 		function exibir_reportar(){
@@ -153,7 +171,7 @@
 <div class="main well">
 	<ul class="nav nav-tabs">
   		<li class="active" id="menu_forcas" onclick="exibir_forcas()"><a href="#">Lista Forcas</a></li>
-  		<li id="menu_notificacoes" onclick="exibir_notificacoes()"><a href="#">Notificações</a></li>
+  		<li id="menu_notificacoes" onclick="exibir_notificacoes()"><a href="#">Notificações    <span class="badge">${notifications}</span></a></li>
   		<li id="menu_criar" onclick="exibir_criar()"><a href="#">Criar Forca</a></li>
   		<li id="menu_reportar" onclick="exibir_reportar()"><a href="#">Reportar</a></li>
 	</ul>
@@ -195,7 +213,7 @@
 				success: function (data) {
 					var texto = '';
 						for(var i=0; i < data.usuarios.length; i++){
-							texto = texto +  ''+'<a href="/spring/perfil_usuario?idusuario='+data.usuarios[i].id+'">'+data.usuarios[i].nome+'</a>'+'<hr>';
+							texto = texto +''+'<a href="#" onclick="exibir_usuario('+data.usuarios[i].id+')">'+data.usuarios[i].login+'</a>'+'<hr>';
 						}
 						$("#lista_usuarios").empty();
 						$("#lista_usuarios").append(texto);

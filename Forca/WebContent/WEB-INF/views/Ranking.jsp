@@ -40,6 +40,6 @@
 <body>
 	<p>Inicio: <input type="text" id="datainicio"></p>
 	<p>Fim: <input type="text" id="datafim"></p>
-	<button type="submit" onclick="ranking_data()" value="Login">Criar Forca</button>
+	<button type="submit" onclick="ranking_data()" value="mostrar">Mostrar</button>
 </body>
 </html>

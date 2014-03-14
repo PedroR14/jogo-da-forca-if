@@ -25,9 +25,8 @@ function listar_forcas(categoria){
 			forcas = data.forcas;
 			var texto = '';
 			for(var i=0; i < forcas.length; i++){
-				texto = texto +  data.forcas[i].dica +'<br>'+'<a  href="#janela1" rel="modal">Responder</a>'+'<br><hr>';
+				texto = texto +  data.forcas[i].dica +'<br>'+'<a  href="#janela1" onclick="abrir_forca('+data.forcas[i].id_forca+')" rel="modal">Responder</a>'+'<br><hr>';
 			}
-			/* onclick="abrir_forca('+data.forcas[i].id_forca+')" */
 	    		texto = texto + '<div class = botoes>';
 	    		texto = texto + '<ul class="pager">';
 	    		if(quant != 0){
@@ -96,6 +95,7 @@ $(document).ready(function(){
     });
     
     $("#mascara").click( function(){
+    	fim_de_jogo();
         $(this).hide();
         $(".window").hide();
     });

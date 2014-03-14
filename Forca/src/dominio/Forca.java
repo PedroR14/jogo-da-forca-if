@@ -1,5 +1,6 @@
 package dominio;
 
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -96,6 +97,13 @@ public class Forca {
 		return tracos;
 	}
 	
+	public String removeAcentos(String str) {
+		 
+		  str = Normalizer.normalize(str, Normalizer.Form.NFD);
+		  str = str.replaceAll("[^\\p{ASCII}]", "");
+		  return str;
+		 
+		}
 	
 	public boolean conten_letra(String Letra, String[] palavra_array){
 		
@@ -168,5 +176,6 @@ public class Forca {
 		
 		return id_forca;
 	}
+	
 
 }

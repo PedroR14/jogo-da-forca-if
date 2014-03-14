@@ -44,12 +44,24 @@ public class UsuariosService {
 		return repositorio.getRanking_Dias(id_usuario, dias);
 	}
 	
-	public List<Usuario> getPor_Login(String login){
-		return repositorio.getPor_Login(login);
+	public List<Usuario> getPor_Login(String login, Integer id_usuario){
+		return repositorio.getPor_Login(login, id_usuario);
 	}
 	
 	public boolean VerificarId(Integer id_usuario){
 		return repositorio.VerificarId(id_usuario);
+	}
+	
+	public Integer count_vitorias(Integer id_usuario){
+		return repositorio.count_vitorias(id_usuario);
+	}
+	
+	public Integer count_derrotas(Integer id_usuario){
+		return repositorio.count_derrotas(id_usuario);
+	}
+	
+	public Integer count_notificacoes(Integer id_usuario){
+		return repositorio.count_notificacoes(id_usuario);
 	}
 	
 }

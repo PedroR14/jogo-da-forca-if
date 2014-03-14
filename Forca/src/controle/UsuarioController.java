@@ -56,7 +56,7 @@ public class UsuarioController {
 		return "index";
 	}
 		
-	
+	int id_notify_aberta = 0;
 	
 	@RequestMapping(value="usuario/logar", method=RequestMethod.POST) // o @RequestMapping captura a URL enviada por algum arquivo, como os JSP dentro da pasta views
 	public String logar(@Valid Usuario usuario, BindingResult result,
@@ -70,11 +70,12 @@ public class UsuarioController {
 					session.setAttribute("usuario", usuarios.get(i));
 					model.addAttribute("pontos", service_forca.getpontos(usuarios.get(i).getid()));
 					model.addAttribute("categorias", service_forca.getTotas_categoria());
-					return "redirect:/usuario/main";
+					model.addAttribute("notifications", service.count_notificacoes(usuarios.get(i).getid()));
+					return "forward:/usuario/main";
 				}
 			}
 			model.addAttribute("mensagem","Login ou senha incorretos");
-			return "redirect:/login";
+			return "forward:/login";
 	}
 	
 	@RequestMapping(value="usuario/main")
@@ -102,6 +103,17 @@ public class UsuarioController {
 		return "redirect:/login";
 	}
 	
+	@RequestMapping(value="ranking")
+	public String pag_mais_ranking(
+			Model model,HttpSession session){
+		if((Usuario)session.getAttribute("usuario") == null){
+			return "redirect:/login";
+		}
+		session.removeAttribute("usuario");
+		
+		return "Ranking";
+	}
+	
 	@RequestMapping(value="usuario/mostraranking")
 	public @ResponseBody EnviarRanking Ranking (Model model, HttpServletResponse response) throws IOException{
 		
@@ -118,9 +130,29 @@ public class UsuarioController {
 	}
 	
 	@RequestMapping(value="usuario/abrirnotificacao")
-	public @ResponseBody Notificacao AbrirNotificacao (Integer id_notificacao, Model model, HttpServletResponse response) throws IOException{
+	public @ResponseBody Notificacao AbrirNotificacao (Integer id_notificacao, Integer action, Model model, HttpServletResponse response) throws IOException{
 		service_forca.MarcarLida_Notificao(id_notificacao);
+		id_notify_aberta = id_notificacao;
 		return service_forca.getNotificacao_porid(id_notificacao);	
+	}
+	
+	@RequestMapping(value="usuario/recusar")
+	public @ResponseBody boolean Recusar_desafio ( Integer id_forca, Model model, HttpServletResponse response, HttpSession session) throws IOException{
+		Usuario usuario_logado = (Usuario)session.getAttribute("usuario");
+		service_forca.excluirnotificacao(id_notify_aberta);
+		service_forca.Notificar(service_forca.get_desafio_idforca(id_forca).getId_usuario_remetente(), "Resultado Desafio","Seu Desafio Foi Recusado pelo usuario<br> "+
+				"<a href=/spring/perfil_usuario?idusuario="+usuario_logado.getid()+">"+usuario_logado.getlogin()+"</a><br> ","<a href='#' onclick='excluir()' >Excluir</a>", "desafio");
+		service_forca.excluirdesafio(id_forca);
+		service_forca.excluir(id_forca);
+		id_notify_aberta = 0;
+		return true;	
+	}
+	
+	@RequestMapping(value="usuario/excluirnotificacao")
+	public @ResponseBody boolean Excluir_Notificacao ( Integer action, Model model, HttpServletResponse response) throws IOException{
+		service_forca.excluirnotificacao(id_notify_aberta);
+		id_notify_aberta = 0;
+		return true;	
 	}
 	
 	@RequestMapping(value="usuario/mostrarnotificacoes")
@@ -180,7 +212,9 @@ public class UsuarioController {
 	public @ResponseBody EnviarPesquisa pesquisa_usuario (String login, Model model, HttpServletResponse response,
 			HttpSession session) throws IOException, ParseException{
 		
-		List<Usuario> usuarios = service.getPor_Login(login);
+		Usuario usuario = (Usuario)session.getAttribute("usuario");
+		
+		List<Usuario> usuarios = service.getPor_Login(login, usuario.getid());
 		
 		return new EnviarPesquisa(usuarios);
 	}
@@ -209,14 +243,6 @@ public class UsuarioController {
 		model.addAttribute("categorias", service_forca.getTotas_categoria());
 		
 		return "lista_forcas";
-	}
-	
-	@RequestMapping(value="ranking")
-	public String pagina_ranking(Model model){
-	
-		//model.addAttribute("usuario", new Usuario());
-		
-		return "Ranking";
 	}
 	
 	@RequestMapping(value="usuarios")
@@ -325,6 +351,10 @@ public class UsuarioController {
 		
 		Usuario pag_usuario = service.getPorid(idusuario);
 		model.addAttribute("perfil", pag_usuario);
+		model.addAttribute("vitorias", service.count_vitorias(idusuario));
+		model.addAttribute("derrotas", service.count_derrotas(idusuario));
+		model.addAttribute("percent_vitorias", usuario.percentual_vitorias(idusuario));
+		model.addAttribute("percent_derrotas", (100 - usuario.percentual_vitorias(idusuario)));
 		
 		return "pagina_usuario";
 	}

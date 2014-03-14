@@ -146,10 +146,10 @@ public class Usuario {
 		forca_criada.setId_usuario(usuario.getid());
 		service_forca.Desafiar(desafio);
 		service_forca.CriarForca(forca_criada);
-		service_forca.Notificar(desafio.getId_usuario_destinatario(), "Você foi desafiado pelo usuario<br> "+
-		"<a href=/spring/perfil_usuario?idusuario="+usuario.getid()+">"+usuario.getlogin()+"</a><br> "+
-		"<a href='/spring/jogar?idforca="+forca_criada.getId_forca()+"'>Responder</a>","Desafio");
-		
+		service_forca.Notificar(desafio.getId_usuario_destinatario(), "Você tem um novo desafio", "Você foi desafiado pelo usuario<br> "+
+		"<a href=/spring/perfil_usuario?idusuario="+usuario.getid()+">"+usuario.getlogin()+"</a> ",
+		"<button type='button' class='btn btn-success' onclick='abrir_forca("+forca_criada.getId_forca()+")'>Responder</button><br>"+
+		"<button type='button' class='btn btn-danger' onclick='recusardesafio("+forca_criada.getId_forca()+")' >Recusar</button>","Desafio");
 	}
 	
 	public Integer gerar_id_usuario(){
@@ -164,4 +164,13 @@ public class Usuario {
 		
 		return id_usuario;
 	}
+	
+	public double percentual_vitorias(Integer id_usuario){
+		 double calculo = 0;
+	
+		 calculo = (100/(service.count_vitorias(id_usuario) + service.count_derrotas(id_usuario))) * service.count_vitorias(id_usuario);
+		 
+		 return calculo;
+	}
+	
 }

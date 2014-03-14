@@ -21,9 +21,15 @@ function mostrar_notificacoes(){
 			texto = '';
 			for (var i = 0; i < data.lista.length; i++) {
 				
-
-				texto = texto + '<a href="#janela1" onclick="abrir_notificacao('+data.lista[i].id_notificacao+')" rel="modal" class="list-group-item"> <h5 class="list-group-item-heading">'+data.lista[i].tipo+'</h5>'+
-				'<p class="list-group-item-text">'+data.lista[i].texto+'</p>'+'</a>';
+				if(data.lista[i].visualizada == 0){	
+					texto = texto + '<a href="#janela1" onclick="abrir_notificacao('+data.lista[i].id_notificacao+')" rel="modal" class="list-group-item active"> <h5 class="list-group-item-heading">'+data.lista[i].tipo+'</h5>'+
+					'<p class="list-group-item-text">'+data.lista[i].cabecalho+'</p>'+'</a>';
+				}
+				if(data.lista[i].visualizada == 1){	
+					texto = texto + '<a href="#janela1" onclick="abrir_notificacao('+data.lista[i].id_notificacao+')" rel="modal" class="list-group-item"> <h5 class="list-group-item-heading">'+data.lista[i].tipo+'</h5>'+
+					'<p class="list-group-item-text">'+data.lista[i].cabecalho+'</p>'+'</a>';
+				}
+				
 			}
 			$(".list-group").empty();
 			$(".list-group").append(texto);
@@ -34,6 +40,7 @@ function mostrar_notificacoes(){
 	});
 }
 
+
 function abrir_notificacao(id_notificacao){
 	$.ajax({
 		url:'abrirnotificacao',
@@ -42,6 +49,8 @@ function abrir_notificacao(id_notificacao){
 		dataType: 'json',
 		success: function (data) {
 			texto = data.texto;
+			texto = texto + "<br>";
+			texto = texto + data.botoes;
 			$(".window").empty();
 			$(".window").append(texto);
 		},
@@ -49,6 +58,47 @@ function abrir_notificacao(id_notificacao){
 			console.log('Deu erro');
 		}
 	});
+}
+
+function recusardesafio(id_forca){
+	$.ajax({
+		url:'recusar',
+		type: 'post',
+		data: {id_forca:id_forca},
+		dataType: 'json',
+		success: function (data) {
+			mostrar_notificacoes();
+			$("#mascara").hide();
+	        $(".window").hide();
+		},
+		error: function () {
+			console.log('Deu erro');
+		}
+	});
+}
+
+function excluir(){
+	$.ajax({
+		url:'excluirnotificacao',
+		type: 'post',
+		dataType: 'json',
+		success: function (data) {
+			mostrar_notificacoes();
+			$("#mascara").hide();
+	        $(".window").hide();
+		},
+		error: function () {
+			console.log('Deu erro');
+		}
+	});
+}
+
+function abrir_forca(id_forca){
+	$(".window").empty();
+	$(".window").load('http://localhost:8080/spring/jogar?idforca='+id_forca);
+	$("#menu_notificacoes").removeClass("active");
+	$("#menu_forcas").removeClass("active");
+	$("#menu_criar").removeClass("active");
 }
 
 $(document).ready(function(){

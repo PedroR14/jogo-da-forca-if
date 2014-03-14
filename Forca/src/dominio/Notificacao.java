@@ -7,7 +7,22 @@ public class Notificacao {
 	private Integer id_notificacao;
 	private Integer id_usuario;
 	private Integer visualizada;
+	private String cabecalho;
 	private String texto;
+	private String botoes;
+	
+	public String getCabecalho() {
+		return cabecalho;
+	}
+	public void setCabecalho(String cabecalho) {
+		this.cabecalho = cabecalho;
+	}
+	public String getBotoes() {
+		return botoes;
+	}
+	public void setBotoes(String botoes) {
+		this.botoes = botoes;
+	}
 	private Date data;
 	private String tipo;
 	
