@@ -248,19 +248,21 @@ public class ForcaDAO implements ForcaRepositorio{
 
 
 	@Override
-	public void Notificar(int id_usuario, String texto, String tipo) {
+	public void Notificar(int id_usuario, String cabecalho, String texto, String botoes, String tipo) {
 		try{
 			Date data = new Date();
 			Connection conexao = dataSource.getConnection();
-			String sql = "insert into notificacao (id_notificacao,id_usuario,visualizada,texto,data,tipo) "
-					+ "values (?,?,?,?,?,?)";
+			String sql = "insert into notificacao (id_notificacao,id_usuario,visualizada,cabecalho,texto,botoes,data,tipo) "
+					+ "values (?,?,?,?,?,?,?,?)";
 			PreparedStatement stm = conexao.prepareStatement(sql);
 			stm.setInt(1, forca.gerar_id_notificacao());
 			stm.setInt(2, id_usuario);
 			stm.setInt(3, 0);
-			stm.setString(4, texto);
-			stm.setDate(5,new java.sql.Date(data.getTime()));
-			stm.setString(6, tipo);
+			stm.setString(4, cabecalho);
+			stm.setString(5, texto);
+			stm.setString(6, botoes);
+			stm.setDate(7,new java.sql.Date(data.getTime()));
+			stm.setString(8, tipo);
 			stm.executeUpdate();
 			stm.close();
 		}catch(SQLException ex){
@@ -283,7 +285,9 @@ public class ForcaDAO implements ForcaRepositorio{
 				Notificacao notify = new Notificacao();
 				notify.setId_notificacao(rs.getInt("id_notificacao"));
 				notify.setId_usuario(rs.getInt("id_usuario"));
+				notify.setCabecalho(rs.getString("cabecalho"));
 				notify.setTexto(rs.getString("texto"));
+				notify.setBotoes(rs.getString("botoes"));
 				notify.setVisualizada(rs.getInt("visualizada"));
 				notify.setData(rs.getDate("data"));
 				notify.setTipo(rs.getString("tipo"));
@@ -504,7 +508,9 @@ public class ForcaDAO implements ForcaRepositorio{
 			while(rs.next()){
 				notify.setId_notificacao(rs.getInt("id_notificacao"));
 				notify.setId_usuario(rs.getInt("id_usuario"));
+				notify.setCabecalho(rs.getString("cabecalho"));
 				notify.setTexto(rs.getString("texto"));
+				notify.setBotoes(rs.getString("botoes"));
 				notify.setVisualizada(rs.getInt("visualizada"));
 				notify.setData(rs.getDate("data"));
 				notify.setTipo(rs.getString("tipo"));
@@ -561,6 +567,29 @@ public class ForcaDAO implements ForcaRepositorio{
 			throw new RuntimeException(ex);
 		}
 		
+	}
+
+
+	@Override
+	public Desafio get_desafio_idforca(Integer id_forca) {
+		try{
+			Connection conexao = dataSource.getConnection();
+			Statement stm = conexao.createStatement();
+			String sql = "select * from desafio where id_forca = "+id_forca+"";
+			ResultSet rs = stm.executeQuery(sql);
+			Desafio desafio = new Desafio();
+			while(rs.next()){
+				desafio.setId_forca( rs.getInt("id_forca") );
+				desafio.setId_usuario_destinatario(rs.getInt("id_usuario_destinatario"));
+				desafio.setId_usuario_remetente(rs.getInt("id_usuario_remetente"));
+				desafio.setAposta(rs.getInt("aposta"));
+			}
+			rs.close();
+			stm.close();
+			return desafio;
+		}catch(SQLException ex){
+			throw new RuntimeException(ex);
+		}
 	}
 
 }

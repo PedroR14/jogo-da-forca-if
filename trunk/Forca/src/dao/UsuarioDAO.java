@@ -210,10 +210,10 @@ public class UsuarioDAO implements UsuarioRepositorio {
 	}
 	
 	@Override
-	public List<Usuario> getPor_Login(String login) {
+	public List<Usuario> getPor_Login(String login, Integer id_usuario) {
 		try{
 			Connection conexao = dataSource.getConnection();
-			String sql = "SELECT * FROM usuarios WHERE login like'"+login+"%'";
+			String sql = "SELECT * FROM usuarios WHERE login like'"+login+"%' and id !="+id_usuario;
 			PreparedStatement stm = conexao.prepareStatement(sql);
 			ResultSet rs = stm.executeQuery(sql);
 			ArrayList<Usuario> usuarios = new ArrayList<>();
@@ -250,4 +250,63 @@ public class UsuarioDAO implements UsuarioRepositorio {
 			throw new RuntimeException(ex);
 		}
 	}
+
+	@Override
+	public Integer count_vitorias(Integer id_usuario) {
+		try{
+			Connection conexao = dataSource.getConnection();
+			String sql = "SELECT count(*) FROM historico WHERE id_usuario="+id_usuario+" and vitoria=1";
+			PreparedStatement stm = conexao.prepareStatement(sql);
+			ResultSet rs = stm.executeQuery(sql);
+			Integer pontos = 0;
+			while(rs.next()){
+				pontos = rs.getInt("count(*)");
+			}
+			rs.close();
+			stm.close();
+			return pontos;
+		}catch(SQLException ex){
+			throw new RuntimeException(ex);
+		}
+	}
+
+	@Override
+	public Integer count_derrotas(Integer id_usuario) {
+		try{
+			Connection conexao = dataSource.getConnection();
+			String sql = "SELECT count(*) FROM historico WHERE id_usuario="+id_usuario+" and vitoria=0";
+			PreparedStatement stm = conexao.prepareStatement(sql);
+			ResultSet rs = stm.executeQuery(sql);
+			Integer pontos = 0;
+			while(rs.next()){
+				pontos = rs.getInt("count(*)");
+			}
+			rs.close();
+			stm.close();
+			return pontos;
+		}catch(SQLException ex){
+			throw new RuntimeException(ex);
+		}
+	}
+	
+	@Override
+	public Integer count_notificacoes(Integer id_usuario) {
+		try{
+			Connection conexao = dataSource.getConnection();
+			String sql = "SELECT count(*) FROM notificacao WHERE id_usuario="+id_usuario+" and visualizada=0";
+			PreparedStatement stm = conexao.prepareStatement(sql);
+			ResultSet rs = stm.executeQuery(sql);
+			Integer total = 0;
+			while(rs.next()){
+				total = rs.getInt("count(*)");
+			}
+			rs.close();
+			stm.close();
+			return total;
+		}catch(SQLException ex){
+			throw new RuntimeException(ex);
+		}
+	}
+	
+	
 }

@@ -16,7 +16,7 @@ public interface ForcaRepositorio {
 	void Desafiar(Desafio desafio);
 	void Reportar(ReportarJogador reportarJogador);
 	void excluirdesafio(Integer id_forca);
-	void Notificar(int id_usuario, String texto, String tipo);
+	void Notificar(int id_usuario, String cabecalho, String texto, String botoes, String tipo);
 	void excluirnotificacao(Integer id_notificacao);
 	List<Notificacao> getNotificacoes(Integer id_usuario);
 	Notificacao getNotificacao_porid(Integer id_notificacao);
@@ -29,4 +29,5 @@ public interface ForcaRepositorio {
 	Integer getDestinatarioDesafio(Integer id_forca);
 	boolean VerificarId(Integer id_forca);
 	boolean VerificarId_notificacao(Integer id_notificacao);
+	Desafio get_desafio_idforca(Integer id_forca);
 }

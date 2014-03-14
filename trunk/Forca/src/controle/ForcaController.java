@@ -154,7 +154,7 @@ public class ForcaController {
 		return new EnviarResposta(letra,posicoes,resultado,acertos,erros,acabou);
 	}
 	
-	@RequestMapping(value="fimdejogo")
+	@RequestMapping(value="usuario/fimdejogo")
 	public @ResponseBody List<Integer> fimdejogo(Model model,HttpSession session){
 		Usuario usuario = (Usuario)session.getAttribute("usuario");
 		boolean desafio = true;
@@ -298,20 +298,30 @@ public class ForcaController {
 		return "desafio";
 	}
 	
-	@RequestMapping(value="desafio/salvar", method=RequestMethod.POST)
-	public String salvardesafio(@Valid Forca forca, BindingResult result, 
-			@RequestParam("id_destin") Integer id_destinatario,int aposta,Model model,HttpSession session){
+	@RequestMapping(value="usuario/desafio/salvar", method=RequestMethod.POST)
+	public @ResponseBody boolean salvardesafio(Integer id_destin,int aposta,
+			 String palavra, String dica, Integer cod_categoria, Model model,
+			 HttpSession session){
 		
-		if(result.hasErrors()){
-			return "desafio";
+		Forca forca = new Forca();
+		boolean val = false;
+		
+		if(palavra.length() < 2 || dica.length() < 5 || cod_categoria == 0){
+			return val;
+		}else{
+			forca.setPalavra(palavra);
+			forca.setDica(dica);
+			forca.setCod_categoria(cod_categoria);
 		}
+		
+		
 		
 		Usuario usuario_remetente = (Usuario)session.getAttribute("usuario");
 		
-		usuario.EnviarDesafio(forca, aposta, usuario_remetente, id_destinatario);
+		usuario.EnviarDesafio(forca, aposta, usuario_remetente, id_destin);
 				
-		return "redirect:/usuario/main";
+		val = true;
+		return val;
 	} 
-	
 	
 }

@@ -12,9 +12,19 @@
 	function validar(){
 		var senha = $("#senha").val();
 		var conf_senha = $("#conf_senha").val();
-		if(senha == conf_senha){
-			$("#formcadastro").submit();
-		}
+		if(senha != null){
+			if(conf_senha != null){
+				if(senha == conf_senha){
+					$("#formcadastro").submit();
+				}else{
+					$("#senhaerro").html("Senhas não conferem");
+				}
+			}else{
+				$("#senhaerro").html("Campo Confirmar senha Obrigatório");
+			}
+		}else{
+			$("#senhaerro").html("Campo senha Obrigatório");
+		}	
 	}
 
 </script>
@@ -78,7 +88,8 @@
     			<input type="password" class="form-control" id="conf_senha" placeholder="Confirmar Senha" name="conf_senha" value="">
     			<form:errors path="usuario.senha" cssStyle="color:red"/>
   			</div>
-  			<button type="submit" onclick="validar()" class="btn btn-primary" value="Login">Cadastrar</button>
+  			<div id="senhaerro" style=" text-color: red"></div>
+  			<button type="button" onclick="validar()" class="btn btn-primary" value="Login">Cadastrar</button>
   			${mensagemerroinsercao}
 		</form>
 	</div>
