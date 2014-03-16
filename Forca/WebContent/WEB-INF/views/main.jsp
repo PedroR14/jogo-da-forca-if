@@ -83,6 +83,8 @@
 			$("#menu_notificacoes").addClass("active");
 			$("#menu_forcas").removeClass("active");
 			$("#menu_criar").removeClass("active");
+			$("#menu_reportar").removeClass("active");
+			$("#menu_punir").removeClass("active");
 			
 		}
 		
@@ -94,6 +96,7 @@
 			$("#menu_forcas").addClass("active");
 			$("#menu_criar").removeClass("active");
 			$("#menu_reportar").removeClass("active");
+			$("#menu_punir").removeClass("active");
 		}
 		
 		function exibir_criar(){
@@ -104,6 +107,7 @@
 			$("#menu_forcas").removeClass("active");
 			$("#menu_criar").addClass("active");
 			$("#menu_reportar").removeClass("active");
+			$("#menu_punir").removeClass("active");
 		}
 		
 		function exibir_usuario(id_usuario){
@@ -132,6 +136,19 @@
 			$("#menu_forcas").removeClass("active");
 			$("#menu_criar").removeClass("active");
 			$("#menu_reportar").addClass("active");
+			$("#menu_punir").removeClass("active");
+			
+		}
+		
+		function exibir_punir(){
+			$(".forcas").empty();
+			$(".filtro").hide();
+			$(".forcas").load('http://localhost:8080/spring/punir_jogador');
+			$("#menu_notificacoes").removeClass("active");
+			$("#menu_forcas").removeClass("active");
+			$("#menu_criar").removeClass("active");
+			$("#menu_reportar").removeClass("active");
+			$("#menu_punir").addClass("active");
 			
 		}
 		
@@ -174,6 +191,7 @@
   		<li id="menu_notificacoes" onclick="exibir_notificacoes()"><a href="#">Notificações    <span class="badge">${notifications}</span></a></li>
   		<li id="menu_criar" onclick="exibir_criar()"><a href="#">Criar Forca</a></li>
   		<li id="menu_reportar" onclick="exibir_reportar()"><a href="#">Reportar</a></li>
+  		<li id="menu_punir" onclick="exibir_punir()"><a href="#">Punir</a></li>
 	</ul>
 	<div class="filtro">
 	<p>Filtro Categoria:</p>

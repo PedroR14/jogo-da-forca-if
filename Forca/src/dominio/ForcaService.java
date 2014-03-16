@@ -43,6 +43,11 @@ public class ForcaService {
 		
 	}
 	
+	public List<Punicao> getTotas_punicao(){
+		return forca_repositorio.getTotas_punicao();
+		
+	}
+	
 	public Categoria getPor_id_categoria(Integer id_categoria){
 		return forca_repositorio.getPor_id_categoria(id_categoria);
 		
@@ -58,6 +63,10 @@ public class ForcaService {
 	
 	public void Reportar(ReportarJogador reportarJogador){
 		forca_repositorio.Reportar(reportarJogador);
+	}
+	
+	public void Punir(UsuarioPunicao usuarioPunicao){
+		forca_repositorio.Punir(usuarioPunicao);
 	}
 	
 	public void excluirdesafio(Integer id_forca){

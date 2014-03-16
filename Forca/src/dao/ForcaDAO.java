@@ -18,7 +18,9 @@ import dominio.Desafio;
 import dominio.Forca;
 import dominio.ForcaRepositorio;
 import dominio.Notificacao;
+import dominio.Punicao;
 import dominio.ReportarJogador;
+import dominio.UsuarioPunicao;
 
 public class ForcaDAO implements ForcaRepositorio{
 	
@@ -57,6 +59,24 @@ public class ForcaDAO implements ForcaRepositorio{
 			stm.setString(1, Integer.toString(reportarJogador.getId_forca()));
 			stm.setString(2, Integer.toString(reportarJogador.getId_usuario()));
 			stm.setString(3, reportarJogador.getObservacao_reportar());
+			stm.executeUpdate();
+			stm.close();
+		}catch(SQLException ex){
+			throw new RuntimeException(ex);
+		}
+		
+	}
+	
+	
+	public void Punir(UsuarioPunicao usuarioPunicao){
+		try{
+			Connection conexao = dataSource.getConnection();
+			String sql = "insert into punicao (idUsuario, codPunicao, observacaoPunicao) "
+					+ "values (?,?,?)";
+			PreparedStatement stm = conexao.prepareStatement(sql);
+			stm.setString(1, Integer.toString(usuarioPunicao.getIdUsuario()));
+			stm.setString(2, Integer.toString(usuarioPunicao.getCodPunicao()));
+			stm.setString(3, usuarioPunicao.getObservacaoPunicao());
 			stm.executeUpdate();
 			stm.close();
 		}catch(SQLException ex){
@@ -181,6 +201,28 @@ public class ForcaDAO implements ForcaRepositorio{
 			rs.close();
 			stm.close();
 			return categorias;
+		}catch(SQLException ex){
+			throw new RuntimeException(ex);
+		}
+	}
+	
+	public List<Punicao> getTotas_punicao() {
+		try{
+			Connection conexao = dataSource.getConnection();
+			Statement stm = conexao.createStatement();
+			String sql = "select * from punicao";
+			ResultSet rs = stm.executeQuery(sql);
+			ArrayList<Punicao> punicoes = new ArrayList<>();
+			while(rs.next()){
+				Punicao p = new Punicao();
+				p.setCOD_PUNICAO( rs.getInt("COD_PUNICAO") );
+				p.setNOME_PUNICAO(rs.getString("nOME_PUNICAO"));
+				p.setTIPO_PUNICAO(rs.getString("tIPO_PUNICAO"));
+				punicoes.add(p);
+			}
+			rs.close();
+			stm.close();
+			return punicoes;
 		}catch(SQLException ex){
 			throw new RuntimeException(ex);
 		}

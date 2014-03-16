@@ -23,8 +23,10 @@ import dominio.Forca;
 import dominio.ForcaService;
 import dominio.InformacoesJogo;
 import dominio.ListaForcas;
+import dominio.Punicao;
 import dominio.ReportarJogador;
 import dominio.Usuario;
+import dominio.UsuarioPunicao;
 import dominio.UsuariosService;
 
 @Controller
@@ -230,6 +232,16 @@ public class ForcaController {
 		return "criar_forca";
 	}
 	
+	@RequestMapping(value="punir_jogador")
+	public String punicao(Model model){
+		
+		
+		List<Punicao> punicoes = service.getTotas_punicao();
+		model.addAttribute("punicoes", punicoes);
+		
+		return "punir_jogador";
+	}
+	
 	@RequestMapping(value="usuario/forcasalvar")
 	public @ResponseBody boolean salvarForca(String palavra, String dica, Integer cod_categoria, 
 			Model model,HttpSession session){
@@ -256,6 +268,20 @@ public class ForcaController {
 		forca_criada.setId_usuario(usuario.getid());
 		forca_criada.setTem_desafio(0);
 		service.CriarForca(forca_criada);
+		val = true;
+		return val;
+	}
+	
+	@RequestMapping(value="punirsalvar")
+	public @ResponseBody boolean salvarPunicao(int idUsuario, int codPunicao, String observacaoPunicao, 
+			Model model,HttpSession session){
+		
+		UsuarioPunicao usuarioPunicao = new UsuarioPunicao(idUsuario,codPunicao,observacaoPunicao);
+		
+		
+		boolean val = false;
+		
+		service.Punir(usuarioPunicao);
 		val = true;
 		return val;
 	}
