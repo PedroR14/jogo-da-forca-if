@@ -11,10 +11,12 @@ public interface ForcaRepositorio {
 	List<Forca> getTodasForca(Integer id_usuario);
 	List<Forca> getTodasForca_semexcessao();
 	List<Categoria> getTotas_categoria();
+	List<Punicao> getTotas_punicao();
 	Categoria getPor_id_categoria(Integer id_categoria);
 	void CriarCategoria(Categoria categoria);
 	void Desafiar(Desafio desafio);
 	void Reportar(ReportarJogador reportarJogador);
+	void Punir(UsuarioPunicao usuarioPunicao);
 	void excluirdesafio(Integer id_forca);
 	void Notificar(int id_usuario, String cabecalho, String texto, String botoes, String tipo);
 	void excluirnotificacao(Integer id_notificacao);
