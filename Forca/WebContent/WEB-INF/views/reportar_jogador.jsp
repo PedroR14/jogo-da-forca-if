@@ -23,7 +23,7 @@
 					url:'reportarsalvar',
 					type: 'post',
 					dataType: 'json',
-					data: {idJogador:idJogador, idForca:idForca, observacao:observacao},
+					data: {idForca:idForca, idJogador:idJogador, observacao:observacao},
 					success: function (data) {
 						if(data == true){
 							alert('Reportagem cadastrada com sucesso');
@@ -33,15 +33,15 @@
 						}
 						if(data == false){
 							if($("#idJogador").val() == ''){
-								$("#idJogadorErro").append("Campo Obrigatório");
+								$("#idJogadorErro").append("Campo Obrigatório o id deve ser maior que 1");
 							}
 							if($("#idForca").val() == ''){
-								$("#idForcaErro").append("Campo Obrigatório");
+								$("#idForcaErro").append("Campo Obrigatório, o id deve ser maior que 1");
 							}
 							if($("#observacao").val() == ''){
-								$("#observacaoErro").append("Campo Obrigatório");
+								$("#observacaoErro").append("Campo Obrigatório, deve conter no mínimo 5 catacteres");
 							}
-							alert('forca não');
+							alert('Denúncia não pode ser salva, verifique o formulario');
 						}
 					},
 					error: function () {
@@ -70,11 +70,10 @@
 
 	<c:url var="actionUrl" value="reportarsalvar" />
 	<form method="post">
-
+	ID da Forca: <input type="text" id="idForca" name="idForca" value="${reportarJogador.idForca}"/> <br>
+			<div id="idForcaErro"></div>
 	ID do Jogador: <input type="text" id="idJogador" name="idJogador" value="${reportarJogador.idJogador}"/> <br>
 			<div id="idJogadorErro"></div>
-	ID da Forca: <input type="text" id="idForca" name="idForca" value="${reportarJogador.idForca}"/> <br>
-			<div id="idForcaErro"></div>  
 	Observação <textarea id="observacao" name="observacao" rows="3" cols="50" >
 	${reportarJogador.observacao}
 	</textarea>		

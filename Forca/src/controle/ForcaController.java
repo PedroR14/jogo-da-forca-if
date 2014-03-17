@@ -293,17 +293,19 @@ public class ForcaController {
 	}
 	
 	@RequestMapping(value="usuario/reportarsalvar")
-	public @ResponseBody boolean salvarReportar(int idJogador, int idForca, String observacao, 
+	public @ResponseBody boolean salvarReportar(int idForca, int idJogador , String observacao, 
 			Model model,HttpSession session){
-		
-		ReportarJogador reportarJogador = new ReportarJogador(idJogador,idForca,observacao);
-		
+
 		boolean val = false;
 		
-		service.Reportar(reportarJogador);
-		
-		val = true;
-		return val;
+		if(idForca <= 0 || idJogador <= 0 || observacao.length() <= 5){
+			return val;
+		}else{
+			ReportarJogador reportarJogador = new ReportarJogador(idForca, idJogador,observacao);	
+			service.Reportar(reportarJogador);
+			val = true;
+			return val;
+		}
 	}
 	
 //FIM REPORTAR	
